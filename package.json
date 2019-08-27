@@ -1,6 +1,6 @@
 {
   "name": "vxe-table-plugin-charts",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "vxe-table charts plugin.",
   "scripts": {
     "lib": "gulp build"

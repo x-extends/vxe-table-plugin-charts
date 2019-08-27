@@ -1,6 +1,15 @@
 import XEUtils from 'xe-utils'
 import echarts from 'echarts/lib/echarts'
 
+// 用于本地调试
+// import 'echarts/lib/chart/bar'
+// import 'echarts/lib/chart/pie'
+// import 'echarts/lib/chart/line'
+// import 'echarts/lib/component/grid'
+// import 'echarts/lib/component/tooltip'
+// import 'echarts/lib/component/legend'
+// import 'echarts/lib/component/legendScroll'
+
 const menuMap = {
   CHART_BAR_X ({ $table, menu }) {
     this.$XModal({
@@ -342,9 +351,12 @@ function handlePrivilegeEvent (params) {
 }
 
 export const VXETablePluginCharts = {
-  install ({ interceptor, menus }) {
-    interceptor.add('event.show_menu', handlePrivilegeEvent)
-    menus.mixin(menuMap)
+  install (VXETable) {
+    if (!VXETable._modal) {
+      throw new Error('[vxe-table-plugin-charts] require Modal module.')
+    }
+    VXETable.interceptor.add('event.show_menu', handlePrivilegeEvent)
+    VXETable.menus.mixin(menuMap)
   }
 }
 

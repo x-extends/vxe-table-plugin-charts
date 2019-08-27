@@ -22,6 +22,13 @@
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+  // import 'echarts/lib/chart/bar'
+  // import 'echarts/lib/chart/pie'
+  // import 'echarts/lib/chart/line'
+  // import 'echarts/lib/component/grid'
+  // import 'echarts/lib/component/tooltip'
+  // import 'echarts/lib/component/legend'
+  // import 'echarts/lib/component/legendScroll'
   var menuMap = {
     CHART_BAR_X: function CHART_BAR_X(_ref) {
       var $table = _ref.$table,
@@ -388,11 +395,13 @@
   }
 
   var VXETablePluginCharts = {
-    install: function install(_ref5) {
-      var interceptor = _ref5.interceptor,
-          menus = _ref5.menus;
-      interceptor.add('event.show_menu', handlePrivilegeEvent);
-      menus.mixin(menuMap);
+    install: function install(VXETable) {
+      if (!VXETable._modal) {
+        throw new Error('[vxe-table-plugin-charts] require Modal module.');
+      }
+
+      VXETable.interceptor.add('event.show_menu', handlePrivilegeEvent);
+      VXETable.menus.mixin(menuMap);
     }
   };
   _exports.VXETablePluginCharts = VXETablePluginCharts;

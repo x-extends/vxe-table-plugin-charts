@@ -73,14 +73,14 @@ export default {
           nickname: 'Nickname1',
           sex: '1',
           age: 26,
-          rate: '3',
+          rate: '3'
         }
       ],
       bodyMenus: [
         [
           {
             code: 'CHART_BAR_Y',
-            name: '柱状图',
+            name: '柱状图'
           }
         ]
       ]
