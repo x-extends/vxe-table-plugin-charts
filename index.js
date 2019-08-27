@@ -1,0 +1,355 @@
+import XEUtils from 'xe-utils'
+import echarts from 'echarts/lib/echarts'
+
+const menuMap = {
+  CHART_BAR_X ({ $table, menu }) {
+    this.$XModal({
+      resize: true,
+      mask: false,
+      lockView: false,
+      showFooter: false,
+      width: 600,
+      height: 400,
+      title: menu.name,
+      slots: {
+        default (params, h) {
+          return [
+            h('div', {
+              class: 'vxe-chart--wrapper'
+            }, [
+              h('div', {
+                class: 'vxe-chart--panel'
+              })
+            ])
+          ]
+        }
+      },
+      events: {
+        show () {
+          const { rows, columns } = $table.getMouseCheckeds()
+          const $chart = echarts.init(this.$el.querySelector('.vxe-chart--wrapper'))
+          let firstColumn = columns[0]
+          let legendOpts = {
+            data: []
+          }
+          let seriesOpts = []
+          let yAxisOpts = {
+            type: 'category',
+            data: rows.map(row => XEUtils.get(row, firstColumn.property))
+          }
+          columns.forEach((column, index) => {
+            if (index) {
+              legendOpts.data.push(column.title)
+              seriesOpts.push({
+                name: column.title,
+                type: 'bar',
+                data: rows.map(row => XEUtils.get(row, column.property))
+              })
+            }
+          })
+          const option = {
+            // grid: {
+            //   top: '1%',
+            //   left: '1%',
+            //   right: '1%',
+            //   bottom: '1%',
+            //   containLabel: true
+            // },
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'shadow'
+              }
+            },
+            legend: legendOpts,
+            xAxis: {
+              type: 'value'
+            },
+            yAxis: yAxisOpts,
+            series: seriesOpts
+          }
+          $chart.setOption(option)
+          this.$chart = $chart
+        },
+        close () {
+          this.$chart.dispose()
+          this.$chart = null
+        },
+        zoom () {
+          this.$chart.resize()
+        }
+      }
+    })
+  },
+  CHART_BAR_Y ({ $table, menu }) {
+    this.$XModal({
+      resize: true,
+      mask: false,
+      lockView: false,
+      showFooter: false,
+      width: 600,
+      height: 400,
+      title: menu.name,
+      slots: {
+        default (params, h) {
+          return [
+            h('div', {
+              class: 'vxe-chart--wrapper'
+            }, [
+              h('div', {
+                class: 'vxe-chart--panel'
+              })
+            ])
+          ]
+        }
+      },
+      events: {
+        show () {
+          const { rows, columns } = $table.getMouseCheckeds()
+          const $chart = echarts.init(this.$el.querySelector('.vxe-chart--wrapper'))
+          let firstColumn = columns[0]
+          let legendOpts = {
+            data: []
+          }
+          let seriesOpts = []
+          let xAxisOpts = {
+            type: 'category',
+            data: rows.map(row => XEUtils.get(row, firstColumn.property))
+          }
+          columns.forEach((column, index) => {
+            if (index) {
+              legendOpts.data.push(column.title)
+              seriesOpts.push({
+                name: column.title,
+                type: 'bar',
+                data: rows.map(row => XEUtils.get(row, column.property))
+              })
+            }
+          })
+          const option = {
+            // grid: {
+            //   top: '1%',
+            //   left: '1%',
+            //   right: '1%',
+            //   bottom: '1%',
+            //   containLabel: true
+            // },
+            tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                type: 'shadow'
+              }
+            },
+            legend: legendOpts,
+            xAxis: xAxisOpts,
+            yAxis: {
+              type: 'value'
+            },
+            series: seriesOpts
+          }
+          $chart.setOption(option)
+          this.$chart = $chart
+        },
+        close () {
+          this.$chart.dispose()
+          this.$chart = null
+        },
+        zoom () {
+          this.$chart.resize()
+        }
+      }
+    })
+  },
+  CHART_LINE ({ $table, menu }) {
+    this.$XModal({
+      resize: true,
+      mask: false,
+      lockView: false,
+      showFooter: false,
+      width: 600,
+      height: 400,
+      title: menu.name,
+      slots: {
+        default (params, h) {
+          return [
+            h('div', {
+              class: 'vxe-chart--wrapper'
+            }, [
+              h('div', {
+                class: 'vxe-chart--panel'
+              })
+            ])
+          ]
+        }
+      },
+      events: {
+        show () {
+          const { rows, columns } = $table.getMouseCheckeds()
+          const $chart = echarts.init(this.$el.querySelector('.vxe-chart--wrapper'))
+          let firstColumn = columns[0]
+          let legendOpts = {
+            data: []
+          }
+          let seriesOpts = []
+          let xAxisOpts = {
+            type: 'category',
+            data: rows.map(row => XEUtils.get(row, firstColumn.property))
+          }
+          columns.forEach((column, index) => {
+            if (index) {
+              legendOpts.data.push(column.title)
+              seriesOpts.push({
+                name: column.title,
+                type: 'line',
+                data: rows.map(row => XEUtils.get(row, column.property))
+              })
+            }
+          })
+          let option = {
+            tooltip: {
+              trigger: 'axis'
+            },
+            legend: legendOpts,
+            // grid: {
+            //     left: '3%',
+            //     right: '4%',
+            //     bottom: '3%',
+            //     containLabel: true
+            // },
+            toolbox: {
+              feature: {
+                saveAsImage: {}
+              }
+            },
+            xAxis: xAxisOpts,
+            yAxis: {
+              type: 'value'
+            },
+            series: seriesOpts
+          }
+          $chart.setOption(option)
+          this.$chart = $chart
+        },
+        close () {
+          this.$chart.dispose()
+          this.$chart = null
+        },
+        zoom () {
+          this.$chart.resize()
+        }
+      }
+    })
+  },
+  CHART_PIE ({ $table, menu }) {
+    this.$XModal({
+      resize: true,
+      mask: false,
+      lockView: false,
+      showFooter: false,
+      width: 600,
+      height: 400,
+      title: menu.name,
+      slots: {
+        default (params, h) {
+          return [
+            h('div', {
+              class: 'vxe-chart--wrapper'
+            }, [
+              h('div', {
+                class: 'vxe-chart--panel'
+              })
+            ])
+          ]
+        }
+      },
+      events: {
+        show () {
+          const { rows, columns } = $table.getMouseCheckeds()
+          const $chart = echarts.init(this.$el.querySelector('.vxe-chart--wrapper'))
+          let firstColumn = columns[0]
+          let legendData = rows.map(row => XEUtils.get(row, firstColumn.property))
+          let seriesData = []
+          rows.forEach(row => {
+            seriesData.push({
+              name: XEUtils.get(row, columns[0].property),
+              value: XEUtils.get(row, columns[1].property)
+            })
+          })
+          let option = {
+            tooltip: {
+              trigger: 'item',
+              formatter: '{a} <br/>{b} : {c} ({d}%)'
+            },
+            legend: {
+              type: 'scroll',
+              orient: 'vertical',
+              right: 10,
+              top: 20,
+              bottom: 20,
+              data: legendData
+              // selected: data.selected
+            },
+            series: [
+              {
+                name: '姓名',
+                type: 'pie',
+                radius: '55%',
+                center: ['40%', '50%'],
+                data: seriesData
+              }
+            ]
+          }
+          $chart.setOption(option)
+          this.$chart = $chart
+        },
+        close () {
+          this.$chart.dispose()
+          this.$chart = null
+        },
+        zoom () {
+          this.$chart.resize()
+        }
+      }
+    })
+  }
+}
+
+function checkPrivilege (item, params) {
+  let { code } = item
+  let { $table } = params
+  switch (code) {
+    case 'CHART_BAR_X':
+    case 'CHART_BAR_Y':
+    case 'CHART_LINE':
+    case 'CHART_PIE':
+      const { rows, columns } = $table.getMouseCheckeds()
+      item.disabled = !rows.length || columns.length < 2
+      break
+  }
+}
+
+function handlePrivilegeEvent (params) {
+  params.options.forEach(list => {
+    list.forEach(item => {
+      checkPrivilege(item, params)
+      if (item.children) {
+        item.children.forEach(child => {
+          checkPrivilege(child, params)
+        })
+      }
+    })
+  })
+}
+
+export const VXETablePluginCharts = {
+  install ({ interceptor, menus }) {
+    interceptor.add('event.show_menu', handlePrivilegeEvent)
+    menus.mixin(menuMap)
+  }
+}
+
+if (typeof window !== 'undefined' && window.VXETable) {
+  window.VXETable.use(VXETablePluginCharts)
+}
+
+export default VXETablePluginCharts
