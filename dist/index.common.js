@@ -5,14 +5,12 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = exports.VXETablePluginCharts = void 0;
 
-var _get = _interopRequireDefault(require("xe-utils/methods/base/get"));
+var _xeUtils = _interopRequireDefault(require("xe-utils/methods/xe-utils"));
 
 var _echarts = _interopRequireDefault(require("echarts/lib/echarts"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-// 支持按需加载
-// 支持按需加载
 // 仅用于本地调试
 function createChartModal(getOptions) {
   return function (params) {
@@ -76,7 +74,7 @@ var menuMap = {
     var xAxisOpts = {
       type: 'category',
       data: rows.map(function (row) {
-        return (0, _get["default"])(row, categoryColumn.property);
+        return _xeUtils["default"].get(row, categoryColumn.property);
       })
     };
     serieColumns.forEach(function (column) {
@@ -85,7 +83,7 @@ var menuMap = {
         name: column.title,
         type: 'bar',
         data: rows.map(function (row) {
-          return (0, _get["default"])(row, column.property);
+          return _xeUtils["default"].get(row, column.property);
         })
       });
     });
@@ -127,7 +125,7 @@ var menuMap = {
     var xAxisOpts = {
       type: 'category',
       data: rows.map(function (row) {
-        return (0, _get["default"])(row, categoryColumn.property);
+        return _xeUtils["default"].get(row, categoryColumn.property);
       })
     };
     serieColumns.forEach(function (column) {
@@ -136,7 +134,7 @@ var menuMap = {
         name: column.title,
         type: 'bar',
         data: rows.map(function (row) {
-          return (0, _get["default"])(row, column.property);
+          return _xeUtils["default"].get(row, column.property);
         })
       });
     });
@@ -178,7 +176,7 @@ var menuMap = {
     var xAxisOpts = {
       type: 'category',
       data: rows.map(function (row) {
-        return (0, _get["default"])(row, categoryColumn.property);
+        return _xeUtils["default"].get(row, categoryColumn.property);
       })
     };
     serieColumns.forEach(function (column) {
@@ -187,7 +185,7 @@ var menuMap = {
         name: column.title,
         type: 'line',
         data: rows.map(function (row) {
-          return (0, _get["default"])(row, column.property);
+          return _xeUtils["default"].get(row, column.property);
         })
       });
     });
@@ -226,13 +224,13 @@ var menuMap = {
     });
     var serieColumn = serieColumns[0];
     var legendData = rows.map(function (row) {
-      return (0, _get["default"])(row, categoryColumn.property);
+      return _xeUtils["default"].get(row, categoryColumn.property);
     });
     var seriesData = [];
     rows.forEach(function (row) {
       seriesData.push({
-        name: (0, _get["default"])(row, categoryColumn.property),
-        value: (0, _get["default"])(row, serieColumn.property)
+        name: _xeUtils["default"].get(row, categoryColumn.property),
+        value: _xeUtils["default"].get(row, serieColumn.property)
       });
     });
     var option = {

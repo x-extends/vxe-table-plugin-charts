@@ -1,29 +1,27 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define("vxe-table-plugin-charts", ["exports", "xe-utils/methods/base/get", "echarts/lib/echarts"], factory);
+    define("vxe-table-plugin-charts", ["exports", "xe-utils/methods/xe-utils", "echarts/lib/echarts"], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("xe-utils/methods/base/get"), require("echarts/lib/echarts"));
+    factory(exports, require("xe-utils/methods/xe-utils"), require("echarts/lib/echarts"));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.xeUtilsMethodsBaseGet, global.echarts);
+    factory(mod.exports, global.xeUtilsMethodsXeUtils, global.echarts);
     global.VXETablePluginCharts = mod.exports.default;
   }
-})(this, function (_exports, _get, _echarts) {
+})(this, function (_exports, _xeUtils, _echarts) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
     value: true
   });
   _exports["default"] = _exports.VXETablePluginCharts = void 0;
-  _get = _interopRequireDefault(_get);
+  _xeUtils = _interopRequireDefault(_xeUtils);
   _echarts = _interopRequireDefault(_echarts);
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-  // 支持按需加载
-  // 支持按需加载
   // 仅用于本地调试
   function createChartModal(getOptions) {
     return function (params) {
@@ -87,7 +85,7 @@
       var xAxisOpts = {
         type: 'category',
         data: rows.map(function (row) {
-          return (0, _get["default"])(row, categoryColumn.property);
+          return _xeUtils["default"].get(row, categoryColumn.property);
         })
       };
       serieColumns.forEach(function (column) {
@@ -96,7 +94,7 @@
           name: column.title,
           type: 'bar',
           data: rows.map(function (row) {
-            return (0, _get["default"])(row, column.property);
+            return _xeUtils["default"].get(row, column.property);
           })
         });
       });
@@ -138,7 +136,7 @@
       var xAxisOpts = {
         type: 'category',
         data: rows.map(function (row) {
-          return (0, _get["default"])(row, categoryColumn.property);
+          return _xeUtils["default"].get(row, categoryColumn.property);
         })
       };
       serieColumns.forEach(function (column) {
@@ -147,7 +145,7 @@
           name: column.title,
           type: 'bar',
           data: rows.map(function (row) {
-            return (0, _get["default"])(row, column.property);
+            return _xeUtils["default"].get(row, column.property);
           })
         });
       });
@@ -189,7 +187,7 @@
       var xAxisOpts = {
         type: 'category',
         data: rows.map(function (row) {
-          return (0, _get["default"])(row, categoryColumn.property);
+          return _xeUtils["default"].get(row, categoryColumn.property);
         })
       };
       serieColumns.forEach(function (column) {
@@ -198,7 +196,7 @@
           name: column.title,
           type: 'line',
           data: rows.map(function (row) {
-            return (0, _get["default"])(row, column.property);
+            return _xeUtils["default"].get(row, column.property);
           })
         });
       });
@@ -237,13 +235,13 @@
       });
       var serieColumn = serieColumns[0];
       var legendData = rows.map(function (row) {
-        return (0, _get["default"])(row, categoryColumn.property);
+        return _xeUtils["default"].get(row, categoryColumn.property);
       });
       var seriesData = [];
       rows.forEach(function (row) {
         seriesData.push({
-          name: (0, _get["default"])(row, categoryColumn.property),
-          value: (0, _get["default"])(row, serieColumn.property)
+          name: _xeUtils["default"].get(row, categoryColumn.property),
+          value: _xeUtils["default"].get(row, serieColumn.property)
         });
       });
       var option = {

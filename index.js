@@ -1,6 +1,4 @@
-// 支持按需加载
-import get from 'xe-utils/methods/base/get'
-// 支持按需加载
+import XEUtils from 'xe-utils/methods/xe-utils'
 import echarts from 'echarts/lib/echarts'
 
 // 仅用于本地调试
@@ -68,14 +66,14 @@ const menuMap = {
     let seriesOpts = []
     let xAxisOpts = {
       type: 'category',
-      data: rows.map(row => get(row, categoryColumn.property))
+      data: rows.map(row => XEUtils.get(row, categoryColumn.property))
     }
     serieColumns.forEach(column => {
       legendOpts.data.push(column.title)
       seriesOpts.push({
         name: column.title,
         type: 'bar',
-        data: rows.map(row => get(row, column.property))
+        data: rows.map(row => XEUtils.get(row, column.property))
       })
     })
     const option = {
@@ -107,14 +105,14 @@ const menuMap = {
     let seriesOpts = []
     let xAxisOpts = {
       type: 'category',
-      data: rows.map(row => get(row, categoryColumn.property))
+      data: rows.map(row => XEUtils.get(row, categoryColumn.property))
     }
     serieColumns.forEach(column => {
       legendOpts.data.push(column.title)
       seriesOpts.push({
         name: column.title,
         type: 'bar',
-        data: rows.map(row => get(row, column.property))
+        data: rows.map(row => XEUtils.get(row, column.property))
       })
     })
     const option = {
@@ -146,14 +144,14 @@ const menuMap = {
     let seriesOpts = []
     let xAxisOpts = {
       type: 'category',
-      data: rows.map(row => get(row, categoryColumn.property))
+      data: rows.map(row => XEUtils.get(row, categoryColumn.property))
     }
     serieColumns.forEach(column => {
       legendOpts.data.push(column.title)
       seriesOpts.push({
         name: column.title,
         type: 'line',
-        data: rows.map(row => get(row, column.property))
+        data: rows.map(row => XEUtils.get(row, column.property))
       })
     })
     let option = {
@@ -182,12 +180,12 @@ const menuMap = {
     let categoryColumn = $table.getColumnByField(category || columns[0].property)
     let serieColumns = columns.filter(column => column.property !== categoryColumn.property)
     let serieColumn = serieColumns[0]
-    let legendData = rows.map(row => get(row, categoryColumn.property))
+    let legendData = rows.map(row => XEUtils.get(row, categoryColumn.property))
     let seriesData = []
     rows.forEach(row => {
       seriesData.push({
-        name: get(row, categoryColumn.property),
-        value: get(row, serieColumn.property)
+        name: XEUtils.get(row, categoryColumn.property),
+        value: XEUtils.get(row, serieColumn.property)
       })
     })
     let option = {
