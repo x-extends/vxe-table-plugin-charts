@@ -59,7 +59,7 @@ function createChartModal(getOptions) {
 }
 
 var menuMap = {
-  CHART_BAR_X: createChartModal(function (params) {
+  CHART_BAR_X_AXIS: createChartModal(function (params) {
     var $table = params.$table;
 
     var _$table$getMouseCheck = $table.getMouseCheckeds(),
@@ -112,7 +112,7 @@ var menuMap = {
     };
     return option;
   }),
-  CHART_BAR_Y: createChartModal(function (params) {
+  CHART_BAR_Y_AXIS: createChartModal(function (params) {
     var $table = params.$table;
 
     var _$table$getMouseCheck2 = $table.getMouseCheckeds(),
@@ -268,8 +268,8 @@ function checkPrivilege(item, params) {
   var $table = params.$table;
 
   switch (code) {
-    case 'CHART_BAR_X':
-    case 'CHART_BAR_Y':
+    case 'CHART_BAR_X_AXIS':
+    case 'CHART_BAR_Y_AXIS':
     case 'CHART_LINE':
     case 'CHART_PIE':
       var _$table$getMouseCheck5 = $table.getMouseCheckeds(),
@@ -297,12 +297,15 @@ function handlePrivilegeEvent(params) {
 
 var VXETablePluginCharts = {
   install: function install(VXETable) {
+    var interceptor = VXETable.interceptor,
+        menus = VXETable.menus;
+
     if (!VXETable._modal) {
       throw new Error('[vxe-table-plugin-charts] require Modal module.');
     }
 
-    VXETable.interceptor.add('event.show_menu', handlePrivilegeEvent);
-    VXETable.menus.mixin(menuMap);
+    interceptor.add('event.show_menu', handlePrivilegeEvent);
+    menus.mixin(menuMap);
   }
 };
 exports.VXETablePluginCharts = VXETablePluginCharts;

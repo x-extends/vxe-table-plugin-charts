@@ -38,8 +38,8 @@ VXETable.use(VXETablePluginCharts)
 
 | code 编码 | describe 描述 | params 参数 |
 |------|------|------|
-| CHART_BAR_X | 横向柱状图 | {category?: field} |
-| CHART_BAR_Y  | 纵向柱状图 | {category?: field} |
+| CHART_BAR_X_AXIS | 横向柱状图 | {category?: field} |
+| CHART_BAR_Y_AXIS  | 纵向柱状图 | {category?: field} |
 | CHART_LINE  | 折线图 | {category?: field} |
 | CHART_PIE  | 饼图 | {category: field} |
 
@@ -74,13 +74,21 @@ export default {
           sex: '1',
           age: 26,
           rate: '3'
+        },
+        {
+          id: 100,
+          name: 'Test2',
+          nickname: 'Nickname2',
+          sex: '0',
+          age: 28,
+          rate: '5'
         }
       ],
       bodyMenus: [
         [
           {
-            code: 'CHART_BAR_Y',
-            name: '柱状图'
+            code: 'CHART_LINE',
+            name: '折线图'
           }
         ]
       ]

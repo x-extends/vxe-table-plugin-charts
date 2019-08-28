@@ -53,7 +53,7 @@ function createChartModal (getOptions) {
 }
 
 const menuMap = {
-  CHART_BAR_X: createChartModal(params => {
+  CHART_BAR_X_AXIS: createChartModal(params => {
     const { $table } = params
     const { rows, columns } = $table.getMouseCheckeds()
     let firstColumn = columns[0]
@@ -98,7 +98,7 @@ const menuMap = {
     }
     return option
   }),
-  CHART_BAR_Y: createChartModal(params => {
+  CHART_BAR_Y_AXIS: createChartModal(params => {
     const { $table } = params
     const { rows, columns } = $table.getMouseCheckeds()
     let firstColumn = columns[0]
@@ -233,8 +233,8 @@ function checkPrivilege (item, params) {
   let { code } = item
   let { $table } = params
   switch (code) {
-    case 'CHART_BAR_X':
-    case 'CHART_BAR_Y':
+    case 'CHART_BAR_X_AXIS':
+    case 'CHART_BAR_Y_AXIS':
     case 'CHART_LINE':
     case 'CHART_PIE':
       const { rows, columns } = $table.getMouseCheckeds()
