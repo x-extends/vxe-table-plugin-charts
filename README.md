@@ -38,12 +38,12 @@ VXETable.use(VXETablePluginCharts)
 
 | code 编码 | describe 描述 | params 参数 |
 |------|------|------|
-| CHART_BAR_X_AXIS | 横向柱状图 | {category?: field} |
-| CHART_BAR_Y_AXIS  | 纵向柱状图 | {category?: field} |
-| CHART_LINE  | 折线图 | {category?: field} |
-| CHART_PIE  | 饼图 | {category: field} |
+| CHART_BAR_X_AXIS | 横向柱状图（如果设置了类别 category 则 series 至少一列，否则 series 至少两列） | {category?: field} |
+| CHART_BAR_Y_AXIS  | 纵向柱状图（如果设置了类别 category 则 series 至少一列，否则 series 至少两列） | {category?: field} |
+| CHART_LINE  | 折线图（如果设置了类别 category 则 series 至少一列，否则 series 至少两列） | {category?: field} |
+| CHART_PIE  | 饼图（如果设置了类别 category 则 series 只需一列，否则 series 需要两列） | {category?: field} |
 
-## demo
+## Demo
 
 ```html
 <vxe-table
@@ -57,8 +57,8 @@ VXETable.use(VXETablePluginCharts)
   <vxe-table-column type="index" width="60"></vxe-table-column>
   <vxe-table-column field="nickname" title="Nickname" :edit-render="{name: 'input'}"></vxe-table-column>
   <vxe-table-column field="sex" title="sex" :edit-render="{name: 'input'}"></vxe-table-column>
-  <vxe-table-column field="age" title="Age"></vxe-table-column>
-  <vxe-table-column field="rate" title="Rate"></vxe-table-column>
+  <vxe-table-column field="age" title="Age" :edit-render="{name: 'input'}"></vxe-table-column>
+  <vxe-table-column field="rate" title="Rate" :edit-render="{name: 'input'}"></vxe-table-column>
 </vxe-table>
 ```
 

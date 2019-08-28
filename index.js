@@ -1,14 +1,16 @@
-import XEUtils from 'xe-utils'
+// 支持按需加载
+import get from 'xe-utils/methods/base/get'
+// 支持按需加载
 import echarts from 'echarts/lib/echarts'
 
 // 仅用于本地调试
-// import 'echarts/lib/chart/bar'
-// import 'echarts/lib/chart/pie'
-// import 'echarts/lib/chart/line'
-// import 'echarts/lib/component/grid'
-// import 'echarts/lib/component/tooltip'
-// import 'echarts/lib/component/legend'
-// import 'echarts/lib/component/legendScroll'
+/* devDependencies */ import 'echarts/lib/chart/bar'
+/* devDependencies */ import 'echarts/lib/chart/pie'
+/* devDependencies */ import 'echarts/lib/chart/line'
+/* devDependencies */ import 'echarts/lib/component/grid'
+/* devDependencies */ import 'echarts/lib/component/tooltip'
+/* devDependencies */ import 'echarts/lib/component/legend'
+/* devDependencies */ import 'echarts/lib/component/legendScroll'
 
 function createChartModal (getOptions) {
   return function (params) {
@@ -54,35 +56,29 @@ function createChartModal (getOptions) {
 
 const menuMap = {
   CHART_BAR_X_AXIS: createChartModal(params => {
-    const { $table } = params
+    const { $table, menu } = params
     const { rows, columns } = $table.getMouseCheckeds()
-    let firstColumn = columns[0]
+    const { params: chartParams = {} } = menu
+    const { category } = chartParams
+    let categoryColumn = $table.getColumnByField(category || columns[0].property)
+    let serieColumns = columns.filter(column => column.property !== categoryColumn.property)
     let legendOpts = {
       data: []
     }
     let seriesOpts = []
     let xAxisOpts = {
       type: 'category',
-      data: rows.map(row => XEUtils.get(row, firstColumn.property))
+      data: rows.map(row => get(row, categoryColumn.property))
     }
-    columns.forEach((column, index) => {
-      if (index) {
-        legendOpts.data.push(column.title)
-        seriesOpts.push({
-          name: column.title,
-          type: 'bar',
-          data: rows.map(row => XEUtils.get(row, column.property))
-        })
-      }
+    serieColumns.forEach(column => {
+      legendOpts.data.push(column.title)
+      seriesOpts.push({
+        name: column.title,
+        type: 'bar',
+        data: rows.map(row => get(row, column.property))
+      })
     })
     const option = {
-      // grid: {
-      //   top: '1%',
-      //   left: '1%',
-      //   right: '1%',
-      //   bottom: '1%',
-      //   containLabel: true
-      // },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -99,35 +95,29 @@ const menuMap = {
     return option
   }),
   CHART_BAR_Y_AXIS: createChartModal(params => {
-    const { $table } = params
+    const { $table, menu } = params
     const { rows, columns } = $table.getMouseCheckeds()
-    let firstColumn = columns[0]
+    const { params: chartParams = {} } = menu
+    const { category } = chartParams
+    let categoryColumn = $table.getColumnByField(category || columns[0].property)
+    let serieColumns = columns.filter(column => column.property !== categoryColumn.property)
     let legendOpts = {
       data: []
     }
     let seriesOpts = []
     let xAxisOpts = {
       type: 'category',
-      data: rows.map(row => XEUtils.get(row, firstColumn.property))
+      data: rows.map(row => get(row, categoryColumn.property))
     }
-    columns.forEach((column, index) => {
-      if (index) {
-        legendOpts.data.push(column.title)
-        seriesOpts.push({
-          name: column.title,
-          type: 'bar',
-          data: rows.map(row => XEUtils.get(row, column.property))
-        })
-      }
+    serieColumns.forEach(column => {
+      legendOpts.data.push(column.title)
+      seriesOpts.push({
+        name: column.title,
+        type: 'bar',
+        data: rows.map(row => get(row, column.property))
+      })
     })
     const option = {
-      // grid: {
-      //   top: '1%',
-      //   left: '1%',
-      //   right: '1%',
-      //   bottom: '1%',
-      //   containLabel: true
-      // },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -144,38 +134,33 @@ const menuMap = {
     return option
   }),
   CHART_LINE: createChartModal(params => {
-    const { $table } = params
+    const { $table, menu } = params
     const { rows, columns } = $table.getMouseCheckeds()
-    let firstColumn = columns[0]
+    const { params: chartParams = {} } = menu
+    const { category } = chartParams
+    let categoryColumn = $table.getColumnByField(category || columns[0].property)
+    let serieColumns = columns.filter(column => column.property !== categoryColumn.property)
     let legendOpts = {
       data: []
     }
     let seriesOpts = []
     let xAxisOpts = {
       type: 'category',
-      data: rows.map(row => XEUtils.get(row, firstColumn.property))
+      data: rows.map(row => get(row, categoryColumn.property))
     }
-    columns.forEach((column, index) => {
-      if (index) {
-        legendOpts.data.push(column.title)
-        seriesOpts.push({
-          name: column.title,
-          type: 'line',
-          data: rows.map(row => XEUtils.get(row, column.property))
-        })
-      }
+    serieColumns.forEach(column => {
+      legendOpts.data.push(column.title)
+      seriesOpts.push({
+        name: column.title,
+        type: 'line',
+        data: rows.map(row => get(row, column.property))
+      })
     })
     let option = {
       tooltip: {
         trigger: 'axis'
       },
       legend: legendOpts,
-      // grid: {
-      //     left: '3%',
-      //     right: '4%',
-      //     bottom: '3%',
-      //     containLabel: true
-      // },
       toolbox: {
         feature: {
           saveAsImage: {}
@@ -190,15 +175,19 @@ const menuMap = {
     return option
   }),
   CHART_PIE: createChartModal(params => {
-    const { $table } = params
+    const { $table, menu } = params
     const { rows, columns } = $table.getMouseCheckeds()
-    let firstColumn = columns[0]
-    let legendData = rows.map(row => XEUtils.get(row, firstColumn.property))
+    const { params: chartParams = {} } = menu
+    const { category } = chartParams
+    let categoryColumn = $table.getColumnByField(category || columns[0].property)
+    let serieColumns = columns.filter(column => column.property !== categoryColumn.property)
+    let serieColumn = serieColumns[0]
+    let legendData = rows.map(row => get(row, categoryColumn.property))
     let seriesData = []
     rows.forEach(row => {
       seriesData.push({
-        name: XEUtils.get(row, columns[0].property),
-        value: XEUtils.get(row, columns[1].property)
+        name: get(row, categoryColumn.property),
+        value: get(row, serieColumn.property)
       })
     })
     let option = {
@@ -217,9 +206,9 @@ const menuMap = {
       },
       series: [
         {
-          name: '姓名',
+          name: serieColumn.title,
           type: 'pie',
-          radius: '55%',
+          radius: '50%',
           center: ['40%', '50%'],
           data: seriesData
         }
@@ -230,15 +219,32 @@ const menuMap = {
 }
 
 function checkPrivilege (item, params) {
-  let { code } = item
-  let { $table } = params
+  const { $table } = params
+  const { code, params: chartParams = {} } = item
   switch (code) {
     case 'CHART_BAR_X_AXIS':
     case 'CHART_BAR_Y_AXIS':
-    case 'CHART_LINE':
-    case 'CHART_PIE':
+    case 'CHART_LINE': {
       const { rows, columns } = $table.getMouseCheckeds()
-      item.disabled = !rows.length || columns.length < 2
+      const { category } = chartParams
+      if (category) {
+        let serieColumns = columns.filter(column => column.property !== category)
+        item.disabled = !rows.length || serieColumns.length < 1
+      } else {
+        item.disabled = !rows.length || columns.length < 2
+      }
+    }
+      break
+    case 'CHART_PIE': {
+      const { rows, columns } = $table.getMouseCheckeds()
+      const { category } = chartParams
+      if (category) {
+        let serieColumns = columns.filter(column => column.property !== category)
+        item.disabled = !rows.length || serieColumns.length !== 1
+      } else {
+        item.disabled = !rows.length || columns.length !== 2
+      }
+    }
       break
   }
 }

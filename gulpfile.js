@@ -28,6 +28,7 @@ gulp.task('build_style', function () {
 
 gulp.task('build_commonjs', function () {
   return gulp.src('index.js')
+    .pipe(replace(/(\/\*\s{1}devDependencies\s{1}\*\/[^\n]+)/g, ''))
     .pipe(babel({
       presets: ['@babel/env']
     }))
@@ -40,6 +41,7 @@ gulp.task('build_commonjs', function () {
 
 gulp.task('build_umd', function () {
   return gulp.src('index.js')
+    .pipe(replace(/(\/\*\s{1}devDependencies\s{1}\*\/[^\n]+)/g, ''))
     .pipe(babel({
       moduleId: pack.name,
       presets: ['@babel/env'],

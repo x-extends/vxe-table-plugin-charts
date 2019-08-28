@@ -5,20 +5,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = exports.VXETablePluginCharts = void 0;
 
-var _xeUtils = _interopRequireDefault(require("xe-utils"));
+var _get = _interopRequireDefault(require("xe-utils/methods/base/get"));
 
 var _echarts = _interopRequireDefault(require("echarts/lib/echarts"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+// 支持按需加载
+// 支持按需加载
 // 仅用于本地调试
-// import 'echarts/lib/chart/bar'
-// import 'echarts/lib/chart/pie'
-// import 'echarts/lib/chart/line'
-// import 'echarts/lib/component/grid'
-// import 'echarts/lib/component/tooltip'
-// import 'echarts/lib/component/legend'
-// import 'echarts/lib/component/legendScroll'
 function createChartModal(getOptions) {
   return function (params) {
     var menu = params.menu;
@@ -60,13 +55,20 @@ function createChartModal(getOptions) {
 
 var menuMap = {
   CHART_BAR_X_AXIS: createChartModal(function (params) {
-    var $table = params.$table;
+    var $table = params.$table,
+        menu = params.menu;
 
     var _$table$getMouseCheck = $table.getMouseCheckeds(),
         rows = _$table$getMouseCheck.rows,
         columns = _$table$getMouseCheck.columns;
 
-    var firstColumn = columns[0];
+    var _menu$params = menu.params,
+        chartParams = _menu$params === void 0 ? {} : _menu$params;
+    var category = chartParams.category;
+    var categoryColumn = $table.getColumnByField(category || columns[0].property);
+    var serieColumns = columns.filter(function (column) {
+      return column.property !== categoryColumn.property;
+    });
     var legendOpts = {
       data: []
     };
@@ -74,29 +76,20 @@ var menuMap = {
     var xAxisOpts = {
       type: 'category',
       data: rows.map(function (row) {
-        return _xeUtils["default"].get(row, firstColumn.property);
+        return (0, _get["default"])(row, categoryColumn.property);
       })
     };
-    columns.forEach(function (column, index) {
-      if (index) {
-        legendOpts.data.push(column.title);
-        seriesOpts.push({
-          name: column.title,
-          type: 'bar',
-          data: rows.map(function (row) {
-            return _xeUtils["default"].get(row, column.property);
-          })
-        });
-      }
+    serieColumns.forEach(function (column) {
+      legendOpts.data.push(column.title);
+      seriesOpts.push({
+        name: column.title,
+        type: 'bar',
+        data: rows.map(function (row) {
+          return (0, _get["default"])(row, column.property);
+        })
+      });
     });
     var option = {
-      // grid: {
-      //   top: '1%',
-      //   left: '1%',
-      //   right: '1%',
-      //   bottom: '1%',
-      //   containLabel: true
-      // },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -113,13 +106,20 @@ var menuMap = {
     return option;
   }),
   CHART_BAR_Y_AXIS: createChartModal(function (params) {
-    var $table = params.$table;
+    var $table = params.$table,
+        menu = params.menu;
 
     var _$table$getMouseCheck2 = $table.getMouseCheckeds(),
         rows = _$table$getMouseCheck2.rows,
         columns = _$table$getMouseCheck2.columns;
 
-    var firstColumn = columns[0];
+    var _menu$params2 = menu.params,
+        chartParams = _menu$params2 === void 0 ? {} : _menu$params2;
+    var category = chartParams.category;
+    var categoryColumn = $table.getColumnByField(category || columns[0].property);
+    var serieColumns = columns.filter(function (column) {
+      return column.property !== categoryColumn.property;
+    });
     var legendOpts = {
       data: []
     };
@@ -127,29 +127,20 @@ var menuMap = {
     var xAxisOpts = {
       type: 'category',
       data: rows.map(function (row) {
-        return _xeUtils["default"].get(row, firstColumn.property);
+        return (0, _get["default"])(row, categoryColumn.property);
       })
     };
-    columns.forEach(function (column, index) {
-      if (index) {
-        legendOpts.data.push(column.title);
-        seriesOpts.push({
-          name: column.title,
-          type: 'bar',
-          data: rows.map(function (row) {
-            return _xeUtils["default"].get(row, column.property);
-          })
-        });
-      }
+    serieColumns.forEach(function (column) {
+      legendOpts.data.push(column.title);
+      seriesOpts.push({
+        name: column.title,
+        type: 'bar',
+        data: rows.map(function (row) {
+          return (0, _get["default"])(row, column.property);
+        })
+      });
     });
     var option = {
-      // grid: {
-      //   top: '1%',
-      //   left: '1%',
-      //   right: '1%',
-      //   bottom: '1%',
-      //   containLabel: true
-      // },
       tooltip: {
         trigger: 'axis',
         axisPointer: {
@@ -166,13 +157,20 @@ var menuMap = {
     return option;
   }),
   CHART_LINE: createChartModal(function (params) {
-    var $table = params.$table;
+    var $table = params.$table,
+        menu = params.menu;
 
     var _$table$getMouseCheck3 = $table.getMouseCheckeds(),
         rows = _$table$getMouseCheck3.rows,
         columns = _$table$getMouseCheck3.columns;
 
-    var firstColumn = columns[0];
+    var _menu$params3 = menu.params,
+        chartParams = _menu$params3 === void 0 ? {} : _menu$params3;
+    var category = chartParams.category;
+    var categoryColumn = $table.getColumnByField(category || columns[0].property);
+    var serieColumns = columns.filter(function (column) {
+      return column.property !== categoryColumn.property;
+    });
     var legendOpts = {
       data: []
     };
@@ -180,32 +178,24 @@ var menuMap = {
     var xAxisOpts = {
       type: 'category',
       data: rows.map(function (row) {
-        return _xeUtils["default"].get(row, firstColumn.property);
+        return (0, _get["default"])(row, categoryColumn.property);
       })
     };
-    columns.forEach(function (column, index) {
-      if (index) {
-        legendOpts.data.push(column.title);
-        seriesOpts.push({
-          name: column.title,
-          type: 'line',
-          data: rows.map(function (row) {
-            return _xeUtils["default"].get(row, column.property);
-          })
-        });
-      }
+    serieColumns.forEach(function (column) {
+      legendOpts.data.push(column.title);
+      seriesOpts.push({
+        name: column.title,
+        type: 'line',
+        data: rows.map(function (row) {
+          return (0, _get["default"])(row, column.property);
+        })
+      });
     });
     var option = {
       tooltip: {
         trigger: 'axis'
       },
       legend: legendOpts,
-      // grid: {
-      //     left: '3%',
-      //     right: '4%',
-      //     bottom: '3%',
-      //     containLabel: true
-      // },
       toolbox: {
         feature: {
           saveAsImage: {}
@@ -220,21 +210,29 @@ var menuMap = {
     return option;
   }),
   CHART_PIE: createChartModal(function (params) {
-    var $table = params.$table;
+    var $table = params.$table,
+        menu = params.menu;
 
     var _$table$getMouseCheck4 = $table.getMouseCheckeds(),
         rows = _$table$getMouseCheck4.rows,
         columns = _$table$getMouseCheck4.columns;
 
-    var firstColumn = columns[0];
+    var _menu$params4 = menu.params,
+        chartParams = _menu$params4 === void 0 ? {} : _menu$params4;
+    var category = chartParams.category;
+    var categoryColumn = $table.getColumnByField(category || columns[0].property);
+    var serieColumns = columns.filter(function (column) {
+      return column.property !== categoryColumn.property;
+    });
+    var serieColumn = serieColumns[0];
     var legendData = rows.map(function (row) {
-      return _xeUtils["default"].get(row, firstColumn.property);
+      return (0, _get["default"])(row, categoryColumn.property);
     });
     var seriesData = [];
     rows.forEach(function (row) {
       seriesData.push({
-        name: _xeUtils["default"].get(row, columns[0].property),
-        value: _xeUtils["default"].get(row, columns[1].property)
+        name: (0, _get["default"])(row, categoryColumn.property),
+        value: (0, _get["default"])(row, serieColumn.property)
       });
     });
     var option = {
@@ -252,9 +250,9 @@ var menuMap = {
 
       },
       series: [{
-        name: '姓名',
+        name: serieColumn.title,
         type: 'pie',
-        radius: '55%',
+        radius: '50%',
         center: ['40%', '50%'],
         data: seriesData
       }]
@@ -264,19 +262,51 @@ var menuMap = {
 };
 
 function checkPrivilege(item, params) {
-  var code = item.code;
   var $table = params.$table;
+  var code = item.code,
+      _item$params = item.params,
+      chartParams = _item$params === void 0 ? {} : _item$params;
 
   switch (code) {
     case 'CHART_BAR_X_AXIS':
     case 'CHART_BAR_Y_AXIS':
     case 'CHART_LINE':
-    case 'CHART_PIE':
-      var _$table$getMouseCheck5 = $table.getMouseCheckeds(),
-          rows = _$table$getMouseCheck5.rows,
-          columns = _$table$getMouseCheck5.columns;
+      {
+        var _$table$getMouseCheck5 = $table.getMouseCheckeds(),
+            rows = _$table$getMouseCheck5.rows,
+            columns = _$table$getMouseCheck5.columns;
 
-      item.disabled = !rows.length || columns.length < 2;
+        var category = chartParams.category;
+
+        if (category) {
+          var serieColumns = columns.filter(function (column) {
+            return column.property !== category;
+          });
+          item.disabled = !rows.length || serieColumns.length < 1;
+        } else {
+          item.disabled = !rows.length || columns.length < 2;
+        }
+      }
+      break;
+
+    case 'CHART_PIE':
+      {
+        var _$table$getMouseCheck6 = $table.getMouseCheckeds(),
+            _rows = _$table$getMouseCheck6.rows,
+            _columns = _$table$getMouseCheck6.columns;
+
+        var _category = chartParams.category;
+
+        if (_category) {
+          var _serieColumns = _columns.filter(function (column) {
+            return column.property !== _category;
+          });
+
+          item.disabled = !_rows.length || _serieColumns.length !== 1;
+        } else {
+          item.disabled = !_rows.length || _columns.length !== 2;
+        }
+      }
       break;
   }
 }
