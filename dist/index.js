@@ -22,6 +22,7 @@
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+  // 仅用于本地调试
   // import 'echarts/lib/chart/bar'
   // import 'echarts/lib/chart/pie'
   // import 'echarts/lib/chart/line'
@@ -29,337 +30,248 @@
   // import 'echarts/lib/component/tooltip'
   // import 'echarts/lib/component/legend'
   // import 'echarts/lib/component/legendScroll'
+  function createChartModal(getOptions) {
+    return function (params) {
+      var menu = params.menu;
+      this.$XModal({
+        resize: true,
+        mask: false,
+        lockView: false,
+        showFooter: false,
+        width: 600,
+        height: 400,
+        title: menu.name,
+        slots: {
+          "default": function _default(params, h) {
+            return [h('div', {
+              "class": 'vxe-chart--wrapper'
+            }, [h('div', {
+              "class": 'vxe-chart--panel'
+            })])];
+          }
+        },
+        events: {
+          show: function show() {
+            var $chart = _echarts["default"].init(this.$el.querySelector('.vxe-chart--wrapper'));
+
+            $chart.setOption(getOptions(params));
+            this.$chart = $chart;
+          },
+          close: function close() {
+            this.$chart.dispose();
+            this.$chart = null;
+          },
+          zoom: function zoom() {
+            this.$chart.resize();
+          }
+        }
+      });
+    };
+  }
+
   var menuMap = {
-    CHART_BAR_X: function CHART_BAR_X(_ref) {
-      var $table = _ref.$table,
-          menu = _ref.menu;
-      this.$XModal({
-        resize: true,
-        mask: false,
-        lockView: false,
-        showFooter: false,
-        width: 600,
-        height: 400,
-        title: menu.name,
-        slots: {
-          "default": function _default(params, h) {
-            return [h('div', {
-              "class": 'vxe-chart--wrapper'
-            }, [h('div', {
-              "class": 'vxe-chart--panel'
-            })])];
-          }
-        },
-        events: {
-          show: function show() {
-            var _$table$getMouseCheck = $table.getMouseCheckeds(),
-                rows = _$table$getMouseCheck.rows,
-                columns = _$table$getMouseCheck.columns;
+    CHART_BAR_X: createChartModal(function (params) {
+      var $table = params.$table;
 
-            var $chart = _echarts["default"].init(this.$el.querySelector('.vxe-chart--wrapper'));
+      var _$table$getMouseCheck = $table.getMouseCheckeds(),
+          rows = _$table$getMouseCheck.rows,
+          columns = _$table$getMouseCheck.columns;
 
-            var firstColumn = columns[0];
-            var legendOpts = {
-              data: []
-            };
-            var seriesOpts = [];
-            var yAxisOpts = {
-              type: 'category',
-              data: rows.map(function (row) {
-                return _xeUtils["default"].get(row, firstColumn.property);
-              })
-            };
-            columns.forEach(function (column, index) {
-              if (index) {
-                legendOpts.data.push(column.title);
-                seriesOpts.push({
-                  name: column.title,
-                  type: 'bar',
-                  data: rows.map(function (row) {
-                    return _xeUtils["default"].get(row, column.property);
-                  })
-                });
-              }
-            });
-            var option = {
-              // grid: {
-              //   top: '1%',
-              //   left: '1%',
-              //   right: '1%',
-              //   bottom: '1%',
-              //   containLabel: true
-              // },
-              tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                  type: 'shadow'
-                }
-              },
-              legend: legendOpts,
-              xAxis: {
-                type: 'value'
-              },
-              yAxis: yAxisOpts,
-              series: seriesOpts
-            };
-            $chart.setOption(option);
-            this.$chart = $chart;
-          },
-          close: function close() {
-            this.$chart.dispose();
-            this.$chart = null;
-          },
-          zoom: function zoom() {
-            this.$chart.resize();
-          }
+      var firstColumn = columns[0];
+      var legendOpts = {
+        data: []
+      };
+      var seriesOpts = [];
+      var xAxisOpts = {
+        type: 'category',
+        data: rows.map(function (row) {
+          return _xeUtils["default"].get(row, firstColumn.property);
+        })
+      };
+      columns.forEach(function (column, index) {
+        if (index) {
+          legendOpts.data.push(column.title);
+          seriesOpts.push({
+            name: column.title,
+            type: 'bar',
+            data: rows.map(function (row) {
+              return _xeUtils["default"].get(row, column.property);
+            })
+          });
         }
       });
-    },
-    CHART_BAR_Y: function CHART_BAR_Y(_ref2) {
-      var $table = _ref2.$table,
-          menu = _ref2.menu;
-      this.$XModal({
-        resize: true,
-        mask: false,
-        lockView: false,
-        showFooter: false,
-        width: 600,
-        height: 400,
-        title: menu.name,
-        slots: {
-          "default": function _default(params, h) {
-            return [h('div', {
-              "class": 'vxe-chart--wrapper'
-            }, [h('div', {
-              "class": 'vxe-chart--panel'
-            })])];
+      var option = {
+        // grid: {
+        //   top: '1%',
+        //   left: '1%',
+        //   right: '1%',
+        //   bottom: '1%',
+        //   containLabel: true
+        // },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
           }
         },
-        events: {
-          show: function show() {
-            var _$table$getMouseCheck2 = $table.getMouseCheckeds(),
-                rows = _$table$getMouseCheck2.rows,
-                columns = _$table$getMouseCheck2.columns;
+        legend: legendOpts,
+        xAxis: xAxisOpts,
+        yAxis: {
+          type: 'value'
+        },
+        series: seriesOpts
+      };
+      return option;
+    }),
+    CHART_BAR_Y: createChartModal(function (params) {
+      var $table = params.$table;
 
-            var $chart = _echarts["default"].init(this.$el.querySelector('.vxe-chart--wrapper'));
+      var _$table$getMouseCheck2 = $table.getMouseCheckeds(),
+          rows = _$table$getMouseCheck2.rows,
+          columns = _$table$getMouseCheck2.columns;
 
-            var firstColumn = columns[0];
-            var legendOpts = {
-              data: []
-            };
-            var seriesOpts = [];
-            var xAxisOpts = {
-              type: 'category',
-              data: rows.map(function (row) {
-                return _xeUtils["default"].get(row, firstColumn.property);
-              })
-            };
-            columns.forEach(function (column, index) {
-              if (index) {
-                legendOpts.data.push(column.title);
-                seriesOpts.push({
-                  name: column.title,
-                  type: 'bar',
-                  data: rows.map(function (row) {
-                    return _xeUtils["default"].get(row, column.property);
-                  })
-                });
-              }
-            });
-            var option = {
-              // grid: {
-              //   top: '1%',
-              //   left: '1%',
-              //   right: '1%',
-              //   bottom: '1%',
-              //   containLabel: true
-              // },
-              tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                  type: 'shadow'
-                }
-              },
-              legend: legendOpts,
-              xAxis: xAxisOpts,
-              yAxis: {
-                type: 'value'
-              },
-              series: seriesOpts
-            };
-            $chart.setOption(option);
-            this.$chart = $chart;
-          },
-          close: function close() {
-            this.$chart.dispose();
-            this.$chart = null;
-          },
-          zoom: function zoom() {
-            this.$chart.resize();
-          }
+      var firstColumn = columns[0];
+      var legendOpts = {
+        data: []
+      };
+      var seriesOpts = [];
+      var xAxisOpts = {
+        type: 'category',
+        data: rows.map(function (row) {
+          return _xeUtils["default"].get(row, firstColumn.property);
+        })
+      };
+      columns.forEach(function (column, index) {
+        if (index) {
+          legendOpts.data.push(column.title);
+          seriesOpts.push({
+            name: column.title,
+            type: 'bar',
+            data: rows.map(function (row) {
+              return _xeUtils["default"].get(row, column.property);
+            })
+          });
         }
       });
-    },
-    CHART_LINE: function CHART_LINE(_ref3) {
-      var $table = _ref3.$table,
-          menu = _ref3.menu;
-      this.$XModal({
-        resize: true,
-        mask: false,
-        lockView: false,
-        showFooter: false,
-        width: 600,
-        height: 400,
-        title: menu.name,
-        slots: {
-          "default": function _default(params, h) {
-            return [h('div', {
-              "class": 'vxe-chart--wrapper'
-            }, [h('div', {
-              "class": 'vxe-chart--panel'
-            })])];
+      var option = {
+        // grid: {
+        //   top: '1%',
+        //   left: '1%',
+        //   right: '1%',
+        //   bottom: '1%',
+        //   containLabel: true
+        // },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
           }
         },
-        events: {
-          show: function show() {
-            var _$table$getMouseCheck3 = $table.getMouseCheckeds(),
-                rows = _$table$getMouseCheck3.rows,
-                columns = _$table$getMouseCheck3.columns;
+        legend: legendOpts,
+        xAxis: xAxisOpts,
+        yAxis: {
+          type: 'value'
+        },
+        series: seriesOpts
+      };
+      return option;
+    }),
+    CHART_LINE: createChartModal(function (params) {
+      var $table = params.$table;
 
-            var $chart = _echarts["default"].init(this.$el.querySelector('.vxe-chart--wrapper'));
+      var _$table$getMouseCheck3 = $table.getMouseCheckeds(),
+          rows = _$table$getMouseCheck3.rows,
+          columns = _$table$getMouseCheck3.columns;
 
-            var firstColumn = columns[0];
-            var legendOpts = {
-              data: []
-            };
-            var seriesOpts = [];
-            var xAxisOpts = {
-              type: 'category',
-              data: rows.map(function (row) {
-                return _xeUtils["default"].get(row, firstColumn.property);
-              })
-            };
-            columns.forEach(function (column, index) {
-              if (index) {
-                legendOpts.data.push(column.title);
-                seriesOpts.push({
-                  name: column.title,
-                  type: 'line',
-                  data: rows.map(function (row) {
-                    return _xeUtils["default"].get(row, column.property);
-                  })
-                });
-              }
-            });
-            var option = {
-              tooltip: {
-                trigger: 'axis'
-              },
-              legend: legendOpts,
-              // grid: {
-              //     left: '3%',
-              //     right: '4%',
-              //     bottom: '3%',
-              //     containLabel: true
-              // },
-              toolbox: {
-                feature: {
-                  saveAsImage: {}
-                }
-              },
-              xAxis: xAxisOpts,
-              yAxis: {
-                type: 'value'
-              },
-              series: seriesOpts
-            };
-            $chart.setOption(option);
-            this.$chart = $chart;
-          },
-          close: function close() {
-            this.$chart.dispose();
-            this.$chart = null;
-          },
-          zoom: function zoom() {
-            this.$chart.resize();
-          }
+      var firstColumn = columns[0];
+      var legendOpts = {
+        data: []
+      };
+      var seriesOpts = [];
+      var xAxisOpts = {
+        type: 'category',
+        data: rows.map(function (row) {
+          return _xeUtils["default"].get(row, firstColumn.property);
+        })
+      };
+      columns.forEach(function (column, index) {
+        if (index) {
+          legendOpts.data.push(column.title);
+          seriesOpts.push({
+            name: column.title,
+            type: 'line',
+            data: rows.map(function (row) {
+              return _xeUtils["default"].get(row, column.property);
+            })
+          });
         }
       });
-    },
-    CHART_PIE: function CHART_PIE(_ref4) {
-      var $table = _ref4.$table,
-          menu = _ref4.menu;
-      this.$XModal({
-        resize: true,
-        mask: false,
-        lockView: false,
-        showFooter: false,
-        width: 600,
-        height: 400,
-        title: menu.name,
-        slots: {
-          "default": function _default(params, h) {
-            return [h('div', {
-              "class": 'vxe-chart--wrapper'
-            }, [h('div', {
-              "class": 'vxe-chart--panel'
-            })])];
+      var option = {
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: legendOpts,
+        // grid: {
+        //     left: '3%',
+        //     right: '4%',
+        //     bottom: '3%',
+        //     containLabel: true
+        // },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
           }
         },
-        events: {
-          show: function show() {
-            var _$table$getMouseCheck4 = $table.getMouseCheckeds(),
-                rows = _$table$getMouseCheck4.rows,
-                columns = _$table$getMouseCheck4.columns;
+        xAxis: xAxisOpts,
+        yAxis: {
+          type: 'value'
+        },
+        series: seriesOpts
+      };
+      return option;
+    }),
+    CHART_PIE: createChartModal(function (params) {
+      var $table = params.$table;
 
-            var $chart = _echarts["default"].init(this.$el.querySelector('.vxe-chart--wrapper'));
+      var _$table$getMouseCheck4 = $table.getMouseCheckeds(),
+          rows = _$table$getMouseCheck4.rows,
+          columns = _$table$getMouseCheck4.columns;
 
-            var firstColumn = columns[0];
-            var legendData = rows.map(function (row) {
-              return _xeUtils["default"].get(row, firstColumn.property);
-            });
-            var seriesData = [];
-            rows.forEach(function (row) {
-              seriesData.push({
-                name: _xeUtils["default"].get(row, columns[0].property),
-                value: _xeUtils["default"].get(row, columns[1].property)
-              });
-            });
-            var option = {
-              tooltip: {
-                trigger: 'item',
-                formatter: '{a} <br/>{b} : {c} ({d}%)'
-              },
-              legend: {
-                type: 'scroll',
-                orient: 'vertical',
-                right: 10,
-                top: 20,
-                bottom: 20,
-                data: legendData // selected: data.selected
-
-              },
-              series: [{
-                name: '姓名',
-                type: 'pie',
-                radius: '55%',
-                center: ['40%', '50%'],
-                data: seriesData
-              }]
-            };
-            $chart.setOption(option);
-            this.$chart = $chart;
-          },
-          close: function close() {
-            this.$chart.dispose();
-            this.$chart = null;
-          },
-          zoom: function zoom() {
-            this.$chart.resize();
-          }
-        }
+      var firstColumn = columns[0];
+      var legendData = rows.map(function (row) {
+        return _xeUtils["default"].get(row, firstColumn.property);
       });
-    }
+      var seriesData = [];
+      rows.forEach(function (row) {
+        seriesData.push({
+          name: _xeUtils["default"].get(row, columns[0].property),
+          value: _xeUtils["default"].get(row, columns[1].property)
+        });
+      });
+      var option = {
+        tooltip: {
+          trigger: 'item',
+          formatter: '{a} <br/>{b} : {c} ({d}%)'
+        },
+        legend: {
+          type: 'scroll',
+          orient: 'vertical',
+          right: 10,
+          top: 20,
+          bottom: 20,
+          data: legendData // selected: data.selected
+
+        },
+        series: [{
+          name: '姓名',
+          type: 'pie',
+          radius: '55%',
+          center: ['40%', '50%'],
+          data: seriesData
+        }]
+      };
+      return option;
+    })
   };
 
   function checkPrivilege(item, params) {
