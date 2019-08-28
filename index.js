@@ -258,11 +258,12 @@ function handlePrivilegeEvent (params) {
 
 export const VXETablePluginCharts = {
   install (VXETable) {
+    let { interceptor, menus } = VXETable
     if (!VXETable._modal) {
       throw new Error('[vxe-table-plugin-charts] require Modal module.')
     }
-    VXETable.interceptor.add('event.show_menu', handlePrivilegeEvent)
-    VXETable.menus.mixin(menuMap)
+    interceptor.add('event.show_menu', handlePrivilegeEvent)
+    menus.mixin(menuMap)
   }
 }
 
