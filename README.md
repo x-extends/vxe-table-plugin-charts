@@ -64,7 +64,7 @@ XEUtils.mixin({
   border
   resizable
   height="500"
-  :data.sync="tableData"
+  :data="tableData"
   :mouse-config="{ selected: true, checked: true }"
   :context-menu="{body: {options: bodyMenus}}"
   :edit-config="{trigger: 'dblclick', mode: 'cell'}">
