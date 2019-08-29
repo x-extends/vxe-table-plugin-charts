@@ -1,13 +1,13 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define("vxe-table-plugin-charts", ["exports", "xe-utils/methods/xe-utils", "echarts/lib/echarts"], factory);
+    define("vxe-table-plugin-charts", ["exports", "xe-utils", "echarts"], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("xe-utils/methods/xe-utils"), require("echarts/lib/echarts"));
+    factory(exports, require("xe-utils"), require("echarts"));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.xeUtilsMethodsXeUtils, global.echarts);
+    factory(mod.exports, global.XEUtils, global.echarts);
     global.VXETablePluginCharts = mod.exports.default;
   }
 })(this, function (_exports, _xeUtils, _echarts) {
