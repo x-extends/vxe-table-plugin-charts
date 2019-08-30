@@ -5,7 +5,7 @@ export interface VXETablePluginStatic {
 }
 
 /**
- * vxe-table renderer plugins for iview.
+ * 基于 vxe-table 表格的图表渲染插件
  */
 declare var VXETablePluginCharts: VXETablePluginStatic;
 
