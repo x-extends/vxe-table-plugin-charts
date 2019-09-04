@@ -11,7 +11,6 @@ var _echarts = _interopRequireDefault(require("echarts/lib/echarts"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-// 仅用于本地调试
 function createChartModal(getOptions) {
   return function (params) {
     var menu = params.menu;
@@ -40,6 +39,11 @@ function createChartModal(getOptions) {
           this.$chart = $chart;
         },
         close: function close() {
+          // 旧版本，即将废弃
+          this.$chart.dispose();
+          this.$chart = null;
+        },
+        hide: function hide() {
           this.$chart.dispose();
           this.$chart = null;
         },

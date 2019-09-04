@@ -1,15 +1,6 @@
 import XEUtils from 'xe-utils/methods/xe-utils'
 import echarts from 'echarts/lib/echarts'
 
-// 仅用于本地调试
-/* devDependencies */ import 'echarts/lib/chart/bar'
-/* devDependencies */ import 'echarts/lib/chart/pie'
-/* devDependencies */ import 'echarts/lib/chart/line'
-/* devDependencies */ import 'echarts/lib/component/grid'
-/* devDependencies */ import 'echarts/lib/component/tooltip'
-/* devDependencies */ import 'echarts/lib/component/legend'
-/* devDependencies */ import 'echarts/lib/component/legendScroll'
-
 function createChartModal (getOptions) {
   return function (params) {
     let { menu } = params
@@ -41,6 +32,11 @@ function createChartModal (getOptions) {
           this.$chart = $chart
         },
         close () {
+          // 旧版本，即将废弃
+          this.$chart.dispose()
+          this.$chart = null
+        },
+        hide () {
           this.$chart.dispose()
           this.$chart = null
         },
