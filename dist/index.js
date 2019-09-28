@@ -1,23 +1,26 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define("vxe-table-plugin-charts", [], factory);
+    define("vxe-table-plugin-charts", ["exports", "xe-utils", "echarts"], factory);
   } else if (typeof exports !== "undefined") {
-    factory();
+    factory(exports, require("xe-utils"), require("echarts"));
   } else {
     var mod = {
       exports: {}
     };
-    factory();
+    factory(mod.exports, global.XEUtils, global.echarts);
     global.VXETablePluginCharts = mod.exports.default;
   }
-})(this, function () {
+})(this, function (_exports, _xeUtils, _echarts) {
   "use strict";
 
-  exports.__esModule = true;
+  Object.defineProperty(_exports, "__esModule", {
+    value: true
+  });
+  _exports["default"] = _exports.VXETablePluginCharts = void 0;
+  _xeUtils = _interopRequireDefault(_xeUtils);
+  _echarts = _interopRequireDefault(_echarts);
 
-  var xe_utils_1 = require("xe-utils");
-
-  var echarts = require("echarts");
+  function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
   function createChartModal(getOptions) {
     return function (params) {
@@ -41,7 +44,8 @@
         },
         events: {
           show: function show() {
-            var $chart = echarts.init(this.$el.querySelector('.vxe-chart--wrapper'));
+            var $chart = _echarts["default"].init(this.$el.querySelector('.vxe-chart--wrapper'));
+
             $chart.setOption(getOptions(params));
             this.$chart = $chart;
           },
@@ -67,12 +71,12 @@
       var $table = params.$table,
           menu = params.menu;
 
-      var _a = $table.getMouseCheckeds(),
-          rows = _a.rows,
-          columns = _a.columns;
+      var _$table$getMouseCheck = $table.getMouseCheckeds(),
+          rows = _$table$getMouseCheck.rows,
+          columns = _$table$getMouseCheck.columns;
 
-      var _b = menu.params,
-          chartParams = _b === void 0 ? {} : _b;
+      var _menu$params = menu.params,
+          chartParams = _menu$params === void 0 ? {} : _menu$params;
       var category = chartParams.category;
       var categoryColumn = $table.getColumnByField(category || columns[0].property);
       var serieColumns = columns.filter(function (column) {
@@ -85,7 +89,7 @@
       var xAxisOpts = {
         type: 'category',
         data: rows.map(function (row) {
-          return xe_utils_1["default"].get(row, categoryColumn.property);
+          return _xeUtils["default"].get(row, categoryColumn.property);
         })
       };
       serieColumns.forEach(function (column) {
@@ -94,7 +98,7 @@
           name: column.title,
           type: 'bar',
           data: rows.map(function (row) {
-            return xe_utils_1["default"].get(row, column.property);
+            return _xeUtils["default"].get(row, column.property);
           })
         });
       });
@@ -118,12 +122,12 @@
       var $table = params.$table,
           menu = params.menu;
 
-      var _a = $table.getMouseCheckeds(),
-          rows = _a.rows,
-          columns = _a.columns;
+      var _$table$getMouseCheck2 = $table.getMouseCheckeds(),
+          rows = _$table$getMouseCheck2.rows,
+          columns = _$table$getMouseCheck2.columns;
 
-      var _b = menu.params,
-          chartParams = _b === void 0 ? {} : _b;
+      var _menu$params2 = menu.params,
+          chartParams = _menu$params2 === void 0 ? {} : _menu$params2;
       var category = chartParams.category;
       var categoryColumn = $table.getColumnByField(category || columns[0].property);
       var serieColumns = columns.filter(function (column) {
@@ -136,7 +140,7 @@
       var xAxisOpts = {
         type: 'category',
         data: rows.map(function (row) {
-          return xe_utils_1["default"].get(row, categoryColumn.property);
+          return _xeUtils["default"].get(row, categoryColumn.property);
         })
       };
       serieColumns.forEach(function (column) {
@@ -145,7 +149,7 @@
           name: column.title,
           type: 'bar',
           data: rows.map(function (row) {
-            return xe_utils_1["default"].get(row, column.property);
+            return _xeUtils["default"].get(row, column.property);
           })
         });
       });
@@ -169,12 +173,12 @@
       var $table = params.$table,
           menu = params.menu;
 
-      var _a = $table.getMouseCheckeds(),
-          rows = _a.rows,
-          columns = _a.columns;
+      var _$table$getMouseCheck3 = $table.getMouseCheckeds(),
+          rows = _$table$getMouseCheck3.rows,
+          columns = _$table$getMouseCheck3.columns;
 
-      var _b = menu.params,
-          chartParams = _b === void 0 ? {} : _b;
+      var _menu$params3 = menu.params,
+          chartParams = _menu$params3 === void 0 ? {} : _menu$params3;
       var category = chartParams.category;
       var categoryColumn = $table.getColumnByField(category || columns[0].property);
       var serieColumns = columns.filter(function (column) {
@@ -187,7 +191,7 @@
       var xAxisOpts = {
         type: 'category',
         data: rows.map(function (row) {
-          return xe_utils_1["default"].get(row, categoryColumn.property);
+          return _xeUtils["default"].get(row, categoryColumn.property);
         })
       };
       serieColumns.forEach(function (column) {
@@ -196,7 +200,7 @@
           name: column.title,
           type: 'line',
           data: rows.map(function (row) {
-            return xe_utils_1["default"].get(row, column.property);
+            return _xeUtils["default"].get(row, column.property);
           })
         });
       });
@@ -222,12 +226,12 @@
       var $table = params.$table,
           menu = params.menu;
 
-      var _a = $table.getMouseCheckeds(),
-          rows = _a.rows,
-          columns = _a.columns;
+      var _$table$getMouseCheck4 = $table.getMouseCheckeds(),
+          rows = _$table$getMouseCheck4.rows,
+          columns = _$table$getMouseCheck4.columns;
 
-      var _b = menu.params,
-          chartParams = _b === void 0 ? {} : _b;
+      var _menu$params4 = menu.params,
+          chartParams = _menu$params4 === void 0 ? {} : _menu$params4;
       var category = chartParams.category;
       var categoryColumn = $table.getColumnByField(category || columns[0].property);
       var serieColumns = columns.filter(function (column) {
@@ -235,13 +239,13 @@
       });
       var serieColumn = serieColumns[0];
       var legendData = rows.map(function (row) {
-        return xe_utils_1["default"].get(row, categoryColumn.property);
+        return _xeUtils["default"].get(row, categoryColumn.property);
       });
       var seriesData = [];
       rows.forEach(function (row) {
         seriesData.push({
-          name: xe_utils_1["default"].get(row, categoryColumn.property),
-          value: xe_utils_1["default"].get(row, serieColumn.property)
+          name: _xeUtils["default"].get(row, categoryColumn.property),
+          value: _xeUtils["default"].get(row, serieColumn.property)
         });
       });
       var option = {
@@ -273,23 +277,23 @@
   function checkPrivilege(item, params) {
     var $table = params.$table;
     var code = item.code,
-        _a = item.params,
-        chartParams = _a === void 0 ? {} : _a;
+        _item$params = item.params,
+        chartParams = _item$params === void 0 ? {} : _item$params;
 
     switch (code) {
       case 'CHART_BAR_X_AXIS':
       case 'CHART_BAR_Y_AXIS':
       case 'CHART_LINE':
         {
-          var _b = $table.getMouseCheckeds(),
-              rows = _b.rows,
-              columns = _b.columns;
+          var _$table$getMouseCheck5 = $table.getMouseCheckeds(),
+              rows = _$table$getMouseCheck5.rows,
+              columns = _$table$getMouseCheck5.columns;
 
-          var category_1 = chartParams.category;
+          var category = chartParams.category;
 
-          if (category_1) {
+          if (category) {
             var serieColumns = columns.filter(function (column) {
-              return column.property !== category_1;
+              return column.property !== category;
             });
             item.disabled = !rows.length || serieColumns.length < 1;
           } else {
@@ -300,19 +304,20 @@
 
       case 'CHART_PIE':
         {
-          var _c = $table.getMouseCheckeds(),
-              rows = _c.rows,
-              columns = _c.columns;
+          var _$table$getMouseCheck6 = $table.getMouseCheckeds(),
+              _rows = _$table$getMouseCheck6.rows,
+              _columns = _$table$getMouseCheck6.columns;
 
-          var category_2 = chartParams.category;
+          var _category = chartParams.category;
 
-          if (category_2) {
-            var serieColumns = columns.filter(function (column) {
-              return column.property !== category_2;
+          if (_category) {
+            var _serieColumns = _columns.filter(function (column) {
+              return column.property !== _category;
             });
-            item.disabled = !rows.length || serieColumns.length !== 1;
+
+            item.disabled = !_rows.length || _serieColumns.length !== 1;
           } else {
-            item.disabled = !rows.length || columns.length !== 2;
+            item.disabled = !_rows.length || _columns.length !== 2;
           }
         }
         break;
@@ -332,18 +337,13 @@
       });
     });
   }
-  /**
-   * 基于 vxe-table 表格的图表渲染插件
-   */
 
+  var VXETablePluginCharts = {
+    install: function install(VXETable) {
+      var interceptor = VXETable.interceptor,
+          menus = VXETable.menus;
 
-  exports.VXETablePluginCharts = {
-    install: function install(xtable) {
-      var interceptor = xtable.interceptor,
-          menus = xtable.menus,
-          _modal = xtable._modal;
-
-      if (!_modal) {
+      if (!VXETable._modal) {
         throw new Error('[vxe-table-plugin-charts] require Modal module.');
       }
 
@@ -351,10 +351,12 @@
       menus.mixin(menuMap);
     }
   };
+  _exports.VXETablePluginCharts = VXETablePluginCharts;
 
   if (typeof window !== 'undefined' && window.VXETable) {
-    window.VXETable.use(exports.VXETablePluginCharts);
+    window.VXETable.use(VXETablePluginCharts);
   }
 
-  exports["default"] = exports.VXETablePluginCharts;
+  var _default2 = VXETablePluginCharts;
+  _exports["default"] = _default2;
 });

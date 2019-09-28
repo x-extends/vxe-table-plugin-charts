@@ -33,7 +33,8 @@ gulp.task('build_commonjs', function () {
   return gulp.src(['depend.ts', 'index.ts'])
     .pipe(sourcemaps.init())
     .pipe(ts({
-      noImplicitAny: true
+      noImplicitAny: true,
+      target: 'es6'
     }))
     .pipe(babel({
       presets: ['@babel/env']
@@ -49,10 +50,11 @@ gulp.task('build_commonjs', function () {
 gulp.task('build_umd', function () {
   return gulp.src(['depend.ts', 'index.ts'])
     .pipe(ts({
-      noImplicitAny: true
+      noImplicitAny: true,
+      target: 'es6'
     }))
-    .pipe(replace(`require("xe-utils/methods/xe-utils")`, `require("xe-utils")`))
-    .pipe(replace(`require("echarts/lib/echarts")`, `require("echarts")`))
+    .pipe(replace(`import XEUtils from 'xe-utils/methods/xe-utils';`, `import XEUtils from 'xe-utils';`))
+    .pipe(replace(`import echarts from 'echarts/lib/echarts';`, `import echarts from 'echarts';`))
     .pipe(babel({
       moduleId: pack.name,
       presets: ['@babel/env'],
