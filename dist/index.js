@@ -17,7 +17,7 @@
 
   var xe_utils_1 = require("xe-utils");
 
-  var echarts_1 = require("echarts");
+  var echarts = require("echarts");
 
   function createChartModal(getOptions) {
     return function (params) {
@@ -41,7 +41,7 @@
         },
         events: {
           show: function show() {
-            var $chart = echarts_1["default"].init(this.$el.querySelector('.vxe-chart--wrapper'));
+            var $chart = echarts.init(this.$el.querySelector('.vxe-chart--wrapper'));
             $chart.setOption(getOptions(params));
             this.$chart = $chart;
           },
