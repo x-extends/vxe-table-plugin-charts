@@ -1,5 +1,5 @@
 import XEUtils from 'xe-utils/methods/xe-utils'
-import echarts from 'echarts/lib/echarts'
+import * as echarts from 'echarts/lib/echarts'
 // import { VXETable } from 'vxe-table'
 
 function createChartModal (getOptions: any) {

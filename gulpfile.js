@@ -54,7 +54,7 @@ gulp.task('build_umd', function () {
       target: 'es6'
     }))
     .pipe(replace(`import XEUtils from 'xe-utils/methods/xe-utils';`, `import XEUtils from 'xe-utils';`))
-    .pipe(replace(`import echarts from 'echarts/lib/echarts';`, `import echarts from 'echarts';`))
+    .pipe(replace(`import * as echarts from 'echarts/lib/echarts';`, `import echarts from 'echarts';`))
     .pipe(babel({
       moduleId: pack.name,
       presets: ['@babel/env'],

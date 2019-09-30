@@ -22,6 +22,7 @@
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+  // import { VXETable } from 'vxe-table'
   function createChartModal(getOptions) {
     return function (params) {
       var menu = params.menu;
@@ -337,13 +338,18 @@
       });
     });
   }
+  /**
+   * 基于 vxe-table 表格的图表渲染插件
+   */
+
 
   var VXETablePluginCharts = {
-    install: function install(VXETable) {
-      var interceptor = VXETable.interceptor,
-          menus = VXETable.menus;
+    install: function install(xtable) {
+      var interceptor = xtable.interceptor,
+          menus = xtable.menus,
+          _modal = xtable._modal;
 
-      if (!VXETable._modal) {
+      if (!_modal) {
         throw new Error('[vxe-table-plugin-charts] require Modal module.');
       }
 
