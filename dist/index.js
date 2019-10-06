@@ -10,7 +10,7 @@
     factory(mod.exports, global.XEUtils, global.echarts);
     global.VXETablePluginCharts = mod.exports.default;
   }
-})(this, function (_exports, _xeUtils, echarts) {
+})(this, function (_exports, _xeUtils, _echarts) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -18,11 +18,7 @@
   });
   _exports["default"] = _exports.VXETablePluginCharts = void 0;
   _xeUtils = _interopRequireDefault(_xeUtils);
-  echarts = _interopRequireWildcard(echarts);
-
-  function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
-
-  function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; if (obj != null) { var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+  _echarts = _interopRequireDefault(_echarts);
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -48,7 +44,8 @@
         },
         events: {
           show: function show() {
-            var $chart = echarts.init(this.$el.querySelector('.vxe-chart--wrapper'));
+            var $chart = _echarts["default"].init(this.$el.querySelector('.vxe-chart--wrapper'));
+
             $chart.setOption(getOptions(params));
             this.$chart = $chart;
           },
@@ -355,7 +352,7 @@
         throw new Error('[vxe-table-plugin-charts] require Modal module.');
       }
 
-      interceptor.add('event.show_menu', handlePrivilegeEvent);
+      interceptor.add('event.showMenu', handlePrivilegeEvent);
       menus.mixin(menuMap);
     }
   };

@@ -1,6 +1,6 @@
 import XEUtils from 'xe-utils/methods/xe-utils'
 import VXETable from 'vxe-table/lib/vxe-table'
-import * as echarts from 'echarts'
+import * as echarts from 'echarts/lib/echarts'
 
 function createChartModal (getOptions: any) {
   return function (this: any, params: any) {
@@ -270,7 +270,7 @@ export const VXETablePluginCharts = {
     if (!_modal) {
       throw new Error('[vxe-table-plugin-charts] require Modal module.')
     }
-    interceptor.add('event.show_menu', handlePrivilegeEvent)
+    interceptor.add('event.showMenu', handlePrivilegeEvent)
     menus.mixin(menuMap)
   }
 }
