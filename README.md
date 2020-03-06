@@ -7,7 +7,7 @@
 [![gzip size: CSS](http://img.badgesize.io/https://unpkg.com/vxe-table-plugin-charts/dist/style.min.css?compression=gzip&label=gzip%20size:%20CSS)](https://unpkg.com/vxe-table-plugin-charts/dist/style.min.css)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/xuliangzhan/vxe-table-plugin-charts/blob/master/LICENSE)
 
-基于 [vxe-table](https://github.com/xuliangzhan/vxe-table) 表格的图表渲染插件
+基于 [vxe-table](https://github.com/xuliangzhan/vxe-table) 表格的图表渲染插件（实验功能，仅供参考）
 
 ## Installing
 
