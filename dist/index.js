@@ -10,7 +10,7 @@
     factory(mod.exports, global.XEUtils, global.echarts);
     global.VXETablePluginCharts = mod.exports.default;
   }
-})(this, function (_exports, _xeUtils, _echarts) {
+})(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _xeUtils, _echarts) {
   "use strict";
 
   Object.defineProperty(_exports, "__esModule", {
@@ -71,9 +71,9 @@
       var $table = params.$table,
           menu = params.menu;
 
-      var _$table$getMouseCheck = $table.getMouseCheckeds(),
-          rows = _$table$getMouseCheck.rows,
-          columns = _$table$getMouseCheck.columns;
+      var _ref = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
+          rows = _ref.rows,
+          columns = _ref.columns;
 
       var _menu$params = menu.params,
           chartParams = _menu$params === void 0 ? {} : _menu$params;
@@ -122,9 +122,9 @@
       var $table = params.$table,
           menu = params.menu;
 
-      var _$table$getMouseCheck2 = $table.getMouseCheckeds(),
-          rows = _$table$getMouseCheck2.rows,
-          columns = _$table$getMouseCheck2.columns;
+      var _ref2 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
+          rows = _ref2.rows,
+          columns = _ref2.columns;
 
       var _menu$params2 = menu.params,
           chartParams = _menu$params2 === void 0 ? {} : _menu$params2;
@@ -173,9 +173,9 @@
       var $table = params.$table,
           menu = params.menu;
 
-      var _$table$getMouseCheck3 = $table.getMouseCheckeds(),
-          rows = _$table$getMouseCheck3.rows,
-          columns = _$table$getMouseCheck3.columns;
+      var _ref3 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
+          rows = _ref3.rows,
+          columns = _ref3.columns;
 
       var _menu$params3 = menu.params,
           chartParams = _menu$params3 === void 0 ? {} : _menu$params3;
@@ -226,9 +226,9 @@
       var $table = params.$table,
           menu = params.menu;
 
-      var _$table$getMouseCheck4 = $table.getMouseCheckeds(),
-          rows = _$table$getMouseCheck4.rows,
-          columns = _$table$getMouseCheck4.columns;
+      var _ref4 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
+          rows = _ref4.rows,
+          columns = _ref4.columns;
 
       var _menu$params4 = menu.params,
           chartParams = _menu$params4 === void 0 ? {} : _menu$params4;
@@ -285,9 +285,9 @@
       case 'CHART_BAR_Y_AXIS':
       case 'CHART_LINE':
         {
-          var _$table$getMouseCheck5 = $table.getMouseCheckeds(),
-              rows = _$table$getMouseCheck5.rows,
-              columns = _$table$getMouseCheck5.columns;
+          var _ref5 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
+              rows = _ref5.rows,
+              columns = _ref5.columns;
 
           var category = chartParams.category;
 
@@ -304,9 +304,9 @@
 
       case 'CHART_PIE':
         {
-          var _$table$getMouseCheck6 = $table.getMouseCheckeds(),
-              _rows = _$table$getMouseCheck6.rows,
-              _columns = _$table$getMouseCheck6.columns;
+          var _ref6 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
+              _rows = _ref6.rows,
+              _columns = _ref6.columns;
 
           var _category = chartParams.category;
 

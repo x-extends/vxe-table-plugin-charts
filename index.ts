@@ -56,7 +56,7 @@ interface legendOpts {
 const menuMap = {
   CHART_BAR_X_AXIS: createChartModal((params: any) => {
     const { $table, menu } = params
-    const { rows, columns } = $table.getMouseCheckeds()
+    const { rows, columns } = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds()
     const { params: chartParams = {} } = menu
     const { category } = chartParams
     let categoryColumn = $table.getColumnByField(category || columns[0].property)
@@ -95,7 +95,7 @@ const menuMap = {
   }),
   CHART_BAR_Y_AXIS: createChartModal((params: any) => {
     const { $table, menu } = params
-    const { rows, columns } = $table.getMouseCheckeds()
+    const { rows, columns } = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds()
     const { params: chartParams = {} } = menu
     const { category } = chartParams
     let categoryColumn = $table.getColumnByField(category || columns[0].property)
@@ -134,7 +134,7 @@ const menuMap = {
   }),
   CHART_LINE: createChartModal((params: any) => {
     const { $table, menu } = params
-    const { rows, columns } = $table.getMouseCheckeds()
+    const { rows, columns } = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds()
     const { params: chartParams = {} } = menu
     const { category } = chartParams
     let categoryColumn = $table.getColumnByField(category || columns[0].property)
@@ -175,7 +175,7 @@ const menuMap = {
   }),
   CHART_PIE: createChartModal((params: any) => {
     const { $table, menu } = params
-    const { rows, columns } = $table.getMouseCheckeds()
+    const { rows, columns } = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds()
     const { params: chartParams = {} } = menu
     const { category } = chartParams
     let categoryColumn = $table.getColumnByField(category || columns[0].property)
@@ -224,7 +224,7 @@ function checkPrivilege (item: any, params: any) {
     case 'CHART_BAR_X_AXIS':
     case 'CHART_BAR_Y_AXIS':
     case 'CHART_LINE': {
-      const { rows, columns } = $table.getMouseCheckeds()
+      const { rows, columns } = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds()
       const { category } = chartParams
       if (category) {
         let serieColumns = columns.filter((column: any) => column.property !== category)
@@ -235,7 +235,7 @@ function checkPrivilege (item: any, params: any) {
     }
       break
     case 'CHART_PIE': {
-      const { rows, columns } = $table.getMouseCheckeds()
+      const { rows, columns } = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds()
       const { category } = chartParams
       if (category) {
         let serieColumns = columns.filter((column: any) => column.property !== category)
