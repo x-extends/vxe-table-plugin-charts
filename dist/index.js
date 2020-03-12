@@ -24,8 +24,16 @@
 
   function createChartModal(getOptions) {
     return function (params) {
-      var menu = params.menu;
-      this.$XModal({
+      var $table = params.$table,
+          menu = params.menu;
+      var chartModals = $table.chartModals;
+
+      if (!chartModals) {
+        chartModals = $table.chartModals = [];
+      }
+
+      var opts = {
+        id: _xeUtils["default"].uniqueId(),
         resize: true,
         mask: false,
         lockView: false,
@@ -43,26 +51,49 @@
           }
         },
         events: {
-          show: function show() {
-            var $chart = _echarts["default"].init(this.$el.querySelector('.vxe-chart--wrapper'));
+          show: function show(_ref) {
+            var $modal = _ref.$modal;
+
+            var $chart = _echarts["default"].init($modal.$el.querySelector('.vxe-chart--wrapper'));
 
             $chart.setOption(getOptions(params));
-            this.$chart = $chart;
+            $modal.$chart = $chart;
           },
-          close: function close() {
+          close: function close(_ref2) {
+            var $modal = _ref2.$modal;
+
             // 旧版本，即将废弃
-            this.$chart.dispose();
-            this.$chart = null;
+            _xeUtils["default"].remove(chartModals, function (id) {
+              return id === $modal.id;
+            });
+
+            $modal.$chart.dispose();
+            $modal.$chart = null;
           },
-          hide: function hide() {
-            this.$chart.dispose();
-            this.$chart = null;
+          hide: function hide(_ref3) {
+            var $modal = _ref3.$modal;
+
+            _xeUtils["default"].remove(chartModals, function (id) {
+              return id === $modal.id;
+            });
+
+            $modal.$chart.dispose();
+            $modal.$chart = null;
           },
-          zoom: function zoom() {
-            this.$chart.resize();
+          zoom: function zoom(_ref4) {
+            var $modal = _ref4.$modal;
+            $modal.$chart.resize();
           }
         }
-      });
+      };
+      chartModals.push(opts.id);
+
+      if (this.$XModal.open) {
+        this.$XModal.open(opts);
+      } else {
+        // 旧版本，即将废弃
+        this.$XModal(opts);
+      }
     };
   }
 
@@ -71,9 +102,9 @@
       var $table = params.$table,
           menu = params.menu;
 
-      var _ref = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
-          rows = _ref.rows,
-          columns = _ref.columns;
+      var _ref5 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
+          rows = _ref5.rows,
+          columns = _ref5.columns;
 
       var _menu$params = menu.params,
           chartParams = _menu$params === void 0 ? {} : _menu$params;
@@ -122,9 +153,9 @@
       var $table = params.$table,
           menu = params.menu;
 
-      var _ref2 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
-          rows = _ref2.rows,
-          columns = _ref2.columns;
+      var _ref6 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
+          rows = _ref6.rows,
+          columns = _ref6.columns;
 
       var _menu$params2 = menu.params,
           chartParams = _menu$params2 === void 0 ? {} : _menu$params2;
@@ -173,9 +204,9 @@
       var $table = params.$table,
           menu = params.menu;
 
-      var _ref3 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
-          rows = _ref3.rows,
-          columns = _ref3.columns;
+      var _ref7 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
+          rows = _ref7.rows,
+          columns = _ref7.columns;
 
       var _menu$params3 = menu.params,
           chartParams = _menu$params3 === void 0 ? {} : _menu$params3;
@@ -226,9 +257,9 @@
       var $table = params.$table,
           menu = params.menu;
 
-      var _ref4 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
-          rows = _ref4.rows,
-          columns = _ref4.columns;
+      var _ref8 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
+          rows = _ref8.rows,
+          columns = _ref8.columns;
 
       var _menu$params4 = menu.params,
           chartParams = _menu$params4 === void 0 ? {} : _menu$params4;
@@ -285,9 +316,9 @@
       case 'CHART_BAR_Y_AXIS':
       case 'CHART_LINE':
         {
-          var _ref5 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
-              rows = _ref5.rows,
-              columns = _ref5.columns;
+          var _ref9 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
+              rows = _ref9.rows,
+              columns = _ref9.columns;
 
           var category = chartParams.category;
 
@@ -304,9 +335,9 @@
 
       case 'CHART_PIE':
         {
-          var _ref6 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
-              _rows = _ref6.rows,
-              _columns = _ref6.columns;
+          var _ref10 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
+              _rows = _ref10.rows,
+              _columns = _ref10.columns;
 
           var _category = chartParams.category;
 
@@ -321,6 +352,23 @@
           }
         }
         break;
+    }
+  }
+
+  function handleBeforeDestroyEvent(_ref11) {
+    var $table = _ref11.$table;
+    var $XModal = $table.$XModal,
+        chartModals = $table.chartModals;
+
+    if (chartModals) {
+      if ($XModal.close) {
+        chartModals.forEach(function (id) {
+          return $XModal.close(id);
+        });
+      } else {
+        // 旧版本，即将废弃
+        $XModal.closeAll();
+      }
     }
   }
 
@@ -352,6 +400,7 @@
         throw new Error('[vxe-table-plugin-charts] require Modal module.');
       }
 
+      interceptor.add('beforeDestroy', handleBeforeDestroyEvent);
       interceptor.add('event.showMenu', handlePrivilegeEvent);
       menus.mixin(menuMap);
     }

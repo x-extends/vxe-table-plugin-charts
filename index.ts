@@ -4,8 +4,13 @@ import * as echarts from 'echarts/lib/echarts'
 
 function createChartModal (getOptions: any) {
   return function (this: any, params: any) {
-    let { menu } = params
-    this.$XModal({
+    let { $table, menu } = params
+    let chartModals: string[] = $table.chartModals
+    if (!chartModals) {
+      chartModals = $table.chartModals = []
+    }
+    const opts = {
+      id: XEUtils.uniqueId(),
       resize: true,
       mask: false,
       lockView: false,
@@ -27,25 +32,34 @@ function createChartModal (getOptions: any) {
         }
       },
       events: {
-        show (this: any) {
-          const $chart = echarts.init(this.$el.querySelector('.vxe-chart--wrapper'))
+        show ({ $modal }: any) {
+          const $chart = echarts.init($modal.$el.querySelector('.vxe-chart--wrapper'))
           $chart.setOption(getOptions(params))
-          this.$chart = $chart
+          $modal.$chart = $chart
         },
-        close (this: any) {
+        close ({ $modal }: any) {
           // 旧版本，即将废弃
-          this.$chart.dispose()
-          this.$chart = null
+          XEUtils.remove(chartModals, id => id === $modal.id)
+          $modal.$chart.dispose()
+          $modal.$chart = null
         },
-        hide (this: any) {
-          this.$chart.dispose()
-          this.$chart = null
+        hide ({ $modal }: any) {
+          XEUtils.remove(chartModals, id => id === $modal.id)
+          $modal.$chart.dispose()
+          $modal.$chart = null
         },
-        zoom (this: any) {
-          this.$chart.resize()
+        zoom ({ $modal }: any) {
+          $modal.$chart.resize()
         }
       }
-    })
+    }
+    chartModals.push(opts.id)
+    if (this.$XModal.open) {
+      this.$XModal.open(opts)
+    } else {
+      // 旧版本，即将废弃
+      this.$XModal(opts)
+    }
   }
 }
 
@@ -248,6 +262,18 @@ function checkPrivilege (item: any, params: any) {
   }
 }
 
+function handleBeforeDestroyEvent ({ $table }: any) {
+  let { $XModal, chartModals } = $table
+  if (chartModals) {
+    if ($XModal.close) {
+      chartModals.forEach((id: string) => $XModal.close(id))
+    } else {
+      // 旧版本，即将废弃
+      $XModal.closeAll()
+    }
+  }
+}
+
 function handlePrivilegeEvent (params: any) {
   params.options.forEach((list: Array<any>) => {
     list.forEach((item: any) => {
@@ -270,6 +296,7 @@ export const VXETablePluginCharts = {
     if (!_modal) {
       throw new Error('[vxe-table-plugin-charts] require Modal module.')
     }
+    interceptor.add('beforeDestroy', handleBeforeDestroyEvent)
     interceptor.add('event.showMenu', handlePrivilegeEvent)
     menus.mixin(menuMap)
   }
