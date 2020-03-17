@@ -392,12 +392,17 @@
 
   var VXETablePluginCharts = {
     install: function install(xtable) {
-      var interceptor = xtable.interceptor,
+      var v = xtable.v,
+          interceptor = xtable.interceptor,
           menus = xtable.menus,
           _modal = xtable._modal;
 
       if (!_modal) {
         throw new Error('[vxe-table-plugin-charts] require Modal module.');
+      }
+
+      if (v !== 'v2') {
+        throw new Error('[vxe-table-plugin-charts] V2 version is required.');
       }
 
       interceptor.add('beforeDestroy', handleBeforeDestroyEvent);

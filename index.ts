@@ -292,9 +292,12 @@ function handlePrivilegeEvent (params: any) {
  */
 export const VXETablePluginCharts = {
   install (xtable: typeof VXETable) {
-    let { interceptor, menus, _modal } = xtable
+    let { v, interceptor, menus, _modal } = xtable
     if (!_modal) {
       throw new Error('[vxe-table-plugin-charts] require Modal module.')
+    }
+    if (v !== 'v2') {
+      throw new Error('[vxe-table-plugin-charts] V2 version is required.')
     }
     interceptor.add('beforeDestroy', handleBeforeDestroyEvent)
     interceptor.add('event.showMenu', handlePrivilegeEvent)
