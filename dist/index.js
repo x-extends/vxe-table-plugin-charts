@@ -22,10 +22,13 @@
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+  /* eslint-enable no-unused-vars */
+  var _vxetable;
+
   function createChartModal(getOptions) {
     return function (params) {
-      var $table = params.$table,
-          menu = params.menu;
+      var menu = params.menu;
+      var $table = params.$table;
       var chartModals = $table.chartModals;
 
       if (!chartModals) {
@@ -59,10 +62,9 @@
             $chart.setOption(getOptions(params));
             $modal.$chart = $chart;
           },
-          close: function close(_ref2) {
+          hide: function hide(_ref2) {
             var $modal = _ref2.$modal;
 
-            // 旧版本，即将废弃
             _xeUtils["default"].remove(chartModals, function (id) {
               return id === $modal.id;
             });
@@ -70,41 +72,26 @@
             $modal.$chart.dispose();
             $modal.$chart = null;
           },
-          hide: function hide(_ref3) {
+          zoom: function zoom(_ref3) {
             var $modal = _ref3.$modal;
-
-            _xeUtils["default"].remove(chartModals, function (id) {
-              return id === $modal.id;
-            });
-
-            $modal.$chart.dispose();
-            $modal.$chart = null;
-          },
-          zoom: function zoom(_ref4) {
-            var $modal = _ref4.$modal;
             $modal.$chart.resize();
           }
         }
       };
       chartModals.push(opts.id);
 
-      if (this.$XModal.open) {
-        this.$XModal.open(opts);
-      } else {
-        // 旧版本，即将废弃
-        this.$XModal(opts);
-      }
+      _vxetable.modal.open(opts);
     };
   }
 
   var menuMap = {
     CHART_BAR_X_AXIS: createChartModal(function (params) {
-      var $table = params.$table,
-          menu = params.menu;
+      var $table = params.$table;
+      var menu = params.menu;
 
-      var _ref5 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
-          rows = _ref5.rows,
-          columns = _ref5.columns;
+      var _$table$getSelectedRa = $table.getSelectedRanges(),
+          rows = _$table$getSelectedRa.rows,
+          columns = _$table$getSelectedRa.columns;
 
       var _menu$params = menu.params,
           chartParams = _menu$params === void 0 ? {} : _menu$params;
@@ -150,12 +137,12 @@
       return option;
     }),
     CHART_BAR_Y_AXIS: createChartModal(function (params) {
-      var $table = params.$table,
-          menu = params.menu;
+      var $table = params.$table;
+      var menu = params.menu;
 
-      var _ref6 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
-          rows = _ref6.rows,
-          columns = _ref6.columns;
+      var _$table$getSelectedRa2 = $table.getSelectedRanges(),
+          rows = _$table$getSelectedRa2.rows,
+          columns = _$table$getSelectedRa2.columns;
 
       var _menu$params2 = menu.params,
           chartParams = _menu$params2 === void 0 ? {} : _menu$params2;
@@ -201,12 +188,12 @@
       return option;
     }),
     CHART_LINE: createChartModal(function (params) {
-      var $table = params.$table,
-          menu = params.menu;
+      var $table = params.$table;
+      var menu = params.menu;
 
-      var _ref7 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
-          rows = _ref7.rows,
-          columns = _ref7.columns;
+      var _$table$getSelectedRa3 = $table.getSelectedRanges(),
+          rows = _$table$getSelectedRa3.rows,
+          columns = _$table$getSelectedRa3.columns;
 
       var _menu$params3 = menu.params,
           chartParams = _menu$params3 === void 0 ? {} : _menu$params3;
@@ -254,12 +241,12 @@
       return option;
     }),
     CHART_PIE: createChartModal(function (params) {
-      var $table = params.$table,
-          menu = params.menu;
+      var $table = params.$table;
+      var menu = params.menu;
 
-      var _ref8 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
-          rows = _ref8.rows,
-          columns = _ref8.columns;
+      var _$table$getSelectedRa4 = $table.getSelectedRanges(),
+          rows = _$table$getSelectedRa4.rows,
+          columns = _$table$getSelectedRa4.columns;
 
       var _menu$params4 = menu.params,
           chartParams = _menu$params4 === void 0 ? {} : _menu$params4;
@@ -316,9 +303,9 @@
       case 'CHART_BAR_Y_AXIS':
       case 'CHART_LINE':
         {
-          var _ref9 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
-              rows = _ref9.rows,
-              columns = _ref9.columns;
+          var _$table$getSelectedRa5 = $table.getSelectedRanges(),
+              rows = _$table$getSelectedRa5.rows,
+              columns = _$table$getSelectedRa5.columns;
 
           var category = chartParams.category;
 
@@ -335,9 +322,9 @@
 
       case 'CHART_PIE':
         {
-          var _ref10 = $table.getSelectedRanges ? $table.getSelectedRanges() : $table.getMouseCheckeds(),
-              _rows = _ref10.rows,
-              _columns = _ref10.columns;
+          var _$table$getSelectedRa6 = $table.getSelectedRanges(),
+              _rows = _$table$getSelectedRa6.rows,
+              _columns = _$table$getSelectedRa6.columns;
 
           var _category = chartParams.category;
 
@@ -355,20 +342,14 @@
     }
   }
 
-  function handleBeforeDestroyEvent(_ref11) {
-    var $table = _ref11.$table;
-    var $XModal = $table.$XModal,
-        chartModals = $table.chartModals;
+  function handleBeforeDestroyEvent(params) {
+    var $table = params.$table;
+    var chartModals = $table.chartModals;
 
     if (chartModals) {
-      if ($XModal.close) {
-        chartModals.forEach(function (id) {
-          return $XModal.close(id);
-        });
-      } else {
-        // 旧版本，即将废弃
-        $XModal.closeAll();
-      }
+      chartModals.slice(0).forEach(function (id) {
+        return _vxetable.modal.close(id);
+      });
     }
   }
 
@@ -394,17 +375,13 @@
     install: function install(xtable) {
       var v = xtable.v,
           interceptor = xtable.interceptor,
-          menus = xtable.menus,
-          _modal = xtable._modal;
-
-      if (!_modal) {
-        throw new Error('[vxe-table-plugin-charts] require Modal module.');
-      }
+          menus = xtable.menus;
 
       if (v !== 'v2') {
         throw new Error('[vxe-table-plugin-charts] V2 version is required.');
       }
 
+      _vxetable = xtable;
       interceptor.add('beforeDestroy', handleBeforeDestroyEvent);
       interceptor.add('event.showMenu', handlePrivilegeEvent);
       menus.mixin(menuMap);
