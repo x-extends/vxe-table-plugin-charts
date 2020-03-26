@@ -54,16 +54,16 @@
           }
         },
         events: {
-          show: function show(_ref) {
-            var $modal = _ref.$modal;
+          show: function show(evntParams) {
+            var $modal = evntParams.$modal;
 
             var $chart = _echarts["default"].init($modal.$el.querySelector('.vxe-chart--wrapper'));
 
             $chart.setOption(getOptions(params));
             $modal.$chart = $chart;
           },
-          hide: function hide(_ref2) {
-            var $modal = _ref2.$modal;
+          hide: function hide(evntParams) {
+            var $modal = evntParams.$modal;
 
             _xeUtils["default"].remove(chartModals, function (id) {
               return id === $modal.id;
@@ -72,8 +72,8 @@
             $modal.$chart.dispose();
             $modal.$chart = null;
           },
-          zoom: function zoom(_ref3) {
-            var $modal = _ref3.$modal;
+          zoom: function zoom(evntParams) {
+            var $modal = evntParams.$modal;
             $modal.$chart.resize();
           }
         }

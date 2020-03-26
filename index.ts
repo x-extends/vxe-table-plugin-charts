@@ -9,6 +9,7 @@ import {
   MenuFirstOption,
   MenuChildOption,
   ColumnConfig,
+  ModalEventParams,
   ModalDefaultSlotParams
 } from 'vxe-table/lib/vxe-table'
 import * as echarts from 'echarts/lib/echarts'
@@ -47,17 +48,20 @@ function createChartModal (getOptions: (params: MenuLinkParams) => { [ket: strin
         }
       },
       events: {
-        show ({ $modal }: any) {
+        show (evntParams: ModalEventParams) {
+          const $modal: any = evntParams.$modal
           const $chart = echarts.init($modal.$el.querySelector('.vxe-chart--wrapper'))
           $chart.setOption(getOptions(params))
           $modal.$chart = $chart
         },
-        hide ({ $modal }: any) {
+        hide (evntParams: ModalEventParams) {
+          const $modal: any = evntParams.$modal
           XEUtils.remove(chartModals, id => id === $modal.id)
           $modal.$chart.dispose()
           $modal.$chart = null
         },
-        zoom ({ $modal }: any) {
+        zoom (evntParams: ModalEventParams) {
+          const $modal: any = evntParams.$modal
           $modal.$chart.resize()
         }
       }
