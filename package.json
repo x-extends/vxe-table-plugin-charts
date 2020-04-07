@@ -1,6 +1,6 @@
 {
   "name": "vxe-table-plugin-charts",
-  "version": "1.2.1",
+  "version": "1.2.3",
   "description": "基于 vxe-table 表格的图表渲染插件",
   "scripts": {
     "lib": "gulp build"
@@ -51,12 +51,12 @@
     "prettier": "^1.18.2",
     "typescript": "^3.8.3",
     "vue": "^2.6.11",
-    "vxe-table": "^2.8.33",
-    "xe-utils": "^2.4.2"
+    "vxe-table": "^2.9.0",
+    "xe-utils": "^2.4.4"
   },
   "peerDependencies": {
     "echarts": ">=4.0.0",
-    "vxe-table": ">=2.8.33",
+    "vxe-table": ">=2.9.0",
     "xe-utils": ">=2.4.0"
   },
   "repository": {
