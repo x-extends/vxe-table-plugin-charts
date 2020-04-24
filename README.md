@@ -16,14 +16,12 @@ npm install xe-utils vxe-table vxe-table-plugin-charts echarts
 ```
 
 ```javascript
-import Vue from 'vue'
-import VXETable from 'vxe-table'
+// ...
+import echarts from 'echarts'
 import VXETablePluginCharts from 'vxe-table-plugin-charts'
 import 'vxe-table-plugin-charts/dist/style.css'
-import echarts from 'echarts'
-import XEUtils from 'XEUtils'
+// ...
 
-Vue.use(VXETable)
 VXETable.use(VXETablePluginCharts)
 ```
 
