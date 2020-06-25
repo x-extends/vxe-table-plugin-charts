@@ -60,7 +60,6 @@ XEUtils.mixin({
 
 ```html
 <vxe-table
-  border
   resizable
   height="500"
   :data="tableData"
