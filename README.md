@@ -28,7 +28,7 @@ VXETable.use(VXETablePluginCharts)
 ## Import on demand
 
 ```javascript
-// 按需导入依赖图表模块
+// ...
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/chart/line'
@@ -36,13 +36,11 @@ import 'echarts/lib/component/grid'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/legendScroll'
-// 按需导入依赖的函数
-import XEUtils from 'xe-utils/methods/xe-utils'
-import get from 'xe-utils/methods/base/get'
+import VXETablePluginCharts from 'vxe-table-plugin-charts'
+import 'vxe-table-plugin-charts/dist/style.css'
+// ...
 
-XEUtils.mixin({
-  get
-})
+VXETable.use(VXETablePluginCharts)
 ```
 
 ## API
