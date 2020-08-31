@@ -7,7 +7,7 @@
 [![gzip size: CSS](http://img.badgesize.io/https://unpkg.com/vxe-table-plugin-charts/dist/style.min.css?compression=gzip&label=gzip%20size:%20CSS)](https://unpkg.com/vxe-table-plugin-charts/dist/style.min.css)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
-基于 [vxe-table](https://www.npmjs.com/package/vxe-table) 2.x 表格的图表渲染插件（实验功能，仅供参考）
+基于 [vxe-table](https://www.npmjs.com/package/vxe-table) pro 的图表渲染插件
 
 ## Installing
 
@@ -61,7 +61,7 @@ VXETable.use(VXETablePluginCharts)
   resizable
   height="500"
   :data="tableData"
-  :mouse-config="{ selected: true, checked: true }"
+  :mouse-config="{ area: true }"
   :context-menu="{body: {options: bodyMenus}}"
   :edit-config="{trigger: 'dblclick', mode: 'cell'}">
   <vxe-table-column type="index" width="60"></vxe-table-column>

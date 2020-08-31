@@ -1,13 +1,13 @@
 (function (global, factory) {
   if (typeof define === "function" && define.amd) {
-    define("vxe-table-plugin-charts", ["exports", "xe-utils", "echarts"], factory);
+    define("vxe-table-plugin-charts", ["exports", "xe-utils/methods/xe-utils", "echarts"], factory);
   } else if (typeof exports !== "undefined") {
-    factory(exports, require("xe-utils"), require("echarts"));
+    factory(exports, require("xe-utils/methods/xe-utils"), require("echarts"));
   } else {
     var mod = {
       exports: {}
     };
-    factory(mod.exports, global.XEUtils, global.echarts);
+    factory(mod.exports, global.xeUtilsMethodsXeUtils, global.echarts);
     global.VXETablePluginCharts = mod.exports.default;
   }
 })(typeof globalThis !== "undefined" ? globalThis : typeof self !== "undefined" ? self : this, function (_exports, _xeUtils, _echarts) {
@@ -22,17 +22,16 @@
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-  /* eslint-enable no-unused-vars */
-  var _vxetable;
-
   function createChartModal(getOptions) {
     return function (params) {
-      var menu = params.menu;
-      var $table = params.$table;
-      var chartModals = $table.chartModals;
+      var $table = params.$table,
+          menu = params.menu;
+      var $vxe = $table.$vxe,
+          _chartModals = $table._chartModals;
+      var modal = $vxe.modal;
 
-      if (!chartModals) {
-        chartModals = $table.chartModals = [];
+      if (!_chartModals) {
+        _chartModals = $table._chartModals = [];
       }
 
       var opts = {
@@ -41,9 +40,13 @@
         mask: false,
         lockView: false,
         showFooter: false,
+        escClosable: true,
         width: 600,
+        minWidth: 500,
         height: 400,
+        minHeight: 300,
         title: menu.name,
+        className: 'vxe-table--ignore-areas-clear vxe-table--charts',
         slots: {
           "default": function _default(params, h) {
             return [h('div', {
@@ -56,65 +59,79 @@
         events: {
           show: function show(evntParams) {
             var $modal = evntParams.$modal;
+            var elem = $modal.$el.querySelector('.vxe-chart--wrapper');
 
-            var $chart = _echarts["default"].init($modal.$el.querySelector('.vxe-chart--wrapper'));
+            if (elem) {
+              var $chart = _echarts["default"].init(elem);
 
-            $chart.setOption(getOptions(params));
-            $modal.$chart = $chart;
+              $chart.setOption(getOptions(params));
+              $modal.$chart = $chart;
+            }
           },
           hide: function hide(evntParams) {
             var $modal = evntParams.$modal;
 
-            _xeUtils["default"].remove(chartModals, function (id) {
+            _xeUtils["default"].remove(_chartModals, function (id) {
               return id === $modal.id;
             });
 
-            $modal.$chart.dispose();
-            $modal.$chart = null;
+            if ($modal.$chart) {
+              $modal.$chart.dispose();
+              $modal.$chart = null;
+            }
           },
           zoom: function zoom(evntParams) {
             var $modal = evntParams.$modal;
-            $modal.$chart.resize();
+
+            if ($modal.$chart) {
+              $modal.$chart.resize();
+            }
           }
         }
       };
-      chartModals.push(opts.id);
 
-      _vxetable.modal.open(opts);
+      _chartModals.push(opts.id);
+
+      modal.open(opts);
     };
   }
 
   var menuMap = {
     CHART_BAR_X_AXIS: createChartModal(function (params) {
-      var $table = params.$table;
-      var menu = params.menu;
-
-      var _$table$getSelectedRa = $table.getSelectedRanges(),
-          rows = _$table$getSelectedRa.rows,
-          columns = _$table$getSelectedRa.columns;
-
+      var $table = params.$table,
+          menu = params.menu;
+      var cellAreas = $table.getCellAreas();
+      var _cellAreas$ = cellAreas[0],
+          rows = _cellAreas$.rows,
+          cols = _cellAreas$.cols;
       var _menu$params = menu.params,
           chartParams = _menu$params === void 0 ? {} : _menu$params;
       var category = chartParams.category;
-      var categoryColumn = $table.getColumnByField(category || columns[0].property);
-      var serieColumns = columns.filter(function (column) {
+      var categoryColumn = $table.getColumnByField(category || cols[0].property);
+      var serieColumns = cols.filter(function (column) {
         return column.property !== categoryColumn.property;
       });
       var legendOpts = {
         data: []
       };
       var seriesOpts = [];
-      var xAxisOpts = {
+      var yAxisOpts = {
         type: 'category',
         data: rows.map(function (row) {
           return _xeUtils["default"].get(row, categoryColumn.property);
         })
+      };
+      var seriesLabel = {
+        normal: {
+          show: true
+        }
       };
       serieColumns.forEach(function (column) {
         legendOpts.data.push(column.title);
         seriesOpts.push({
           name: column.title,
           type: 'bar',
+          label: seriesLabel,
           data: rows.map(function (row) {
             return _xeUtils["default"].get(row, column.property);
           })
@@ -127,28 +144,33 @@
             type: 'shadow'
           }
         },
+        grid: {
+          left: '4%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
         legend: legendOpts,
-        xAxis: xAxisOpts,
-        yAxis: {
+        xAxis: {
           type: 'value'
         },
+        yAxis: yAxisOpts,
         series: seriesOpts
       };
       return option;
     }),
     CHART_BAR_Y_AXIS: createChartModal(function (params) {
-      var $table = params.$table;
-      var menu = params.menu;
-
-      var _$table$getSelectedRa2 = $table.getSelectedRanges(),
-          rows = _$table$getSelectedRa2.rows,
-          columns = _$table$getSelectedRa2.columns;
-
+      var $table = params.$table,
+          menu = params.menu;
+      var cellAreas = $table.getCellAreas();
+      var _cellAreas$2 = cellAreas[0],
+          rows = _cellAreas$2.rows,
+          cols = _cellAreas$2.cols;
       var _menu$params2 = menu.params,
           chartParams = _menu$params2 === void 0 ? {} : _menu$params2;
       var category = chartParams.category;
-      var categoryColumn = $table.getColumnByField(category || columns[0].property);
-      var serieColumns = columns.filter(function (column) {
+      var categoryColumn = $table.getColumnByField(category || cols[0].property);
+      var serieColumns = cols.filter(function (column) {
         return column.property !== categoryColumn.property;
       });
       var legendOpts = {
@@ -161,11 +183,17 @@
           return _xeUtils["default"].get(row, categoryColumn.property);
         })
       };
+      var seriesLabel = {
+        normal: {
+          show: true
+        }
+      };
       serieColumns.forEach(function (column) {
         legendOpts.data.push(column.title);
         seriesOpts.push({
           name: column.title,
           type: 'bar',
+          label: seriesLabel,
           data: rows.map(function (row) {
             return _xeUtils["default"].get(row, column.property);
           })
@@ -177,6 +205,12 @@
           axisPointer: {
             type: 'shadow'
           }
+        },
+        grid: {
+          left: '4%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
         },
         legend: legendOpts,
         xAxis: xAxisOpts,
@@ -188,18 +222,17 @@
       return option;
     }),
     CHART_LINE: createChartModal(function (params) {
-      var $table = params.$table;
-      var menu = params.menu;
-
-      var _$table$getSelectedRa3 = $table.getSelectedRanges(),
-          rows = _$table$getSelectedRa3.rows,
-          columns = _$table$getSelectedRa3.columns;
-
+      var $table = params.$table,
+          menu = params.menu;
+      var cellAreas = $table.getCellAreas();
+      var _cellAreas$3 = cellAreas[0],
+          rows = _cellAreas$3.rows,
+          cols = _cellAreas$3.cols;
       var _menu$params3 = menu.params,
           chartParams = _menu$params3 === void 0 ? {} : _menu$params3;
       var category = chartParams.category;
-      var categoryColumn = $table.getColumnByField(category || columns[0].property);
-      var serieColumns = columns.filter(function (column) {
+      var categoryColumn = $table.getColumnByField(category || cols[0].property);
+      var serieColumns = cols.filter(function (column) {
         return column.property !== categoryColumn.property;
       });
       var legendOpts = {
@@ -232,6 +265,12 @@
             saveAsImage: {}
           }
         },
+        grid: {
+          left: '4%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
         xAxis: xAxisOpts,
         yAxis: {
           type: 'value'
@@ -241,18 +280,17 @@
       return option;
     }),
     CHART_PIE: createChartModal(function (params) {
-      var $table = params.$table;
-      var menu = params.menu;
-
-      var _$table$getSelectedRa4 = $table.getSelectedRanges(),
-          rows = _$table$getSelectedRa4.rows,
-          columns = _$table$getSelectedRa4.columns;
-
+      var $table = params.$table,
+          menu = params.menu;
+      var cellAreas = $table.getCellAreas();
+      var _cellAreas$4 = cellAreas[0],
+          rows = _cellAreas$4.rows,
+          cols = _cellAreas$4.cols;
       var _menu$params4 = menu.params,
           chartParams = _menu$params4 === void 0 ? {} : _menu$params4;
       var category = chartParams.category;
-      var categoryColumn = $table.getColumnByField(category || columns[0].property);
-      var serieColumns = columns.filter(function (column) {
+      var categoryColumn = $table.getColumnByField(category || cols[0].property);
+      var serieColumns = cols.filter(function (column) {
         return column.property !== categoryColumn.property;
       });
       var serieColumn = serieColumns[0];
@@ -280,6 +318,12 @@
           data: legendData // selected: data.selected
 
         },
+        grid: {
+          left: '4%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true
+        },
         series: [{
           name: serieColumn.title,
           type: 'pie',
@@ -303,53 +347,66 @@
       case 'CHART_BAR_Y_AXIS':
       case 'CHART_LINE':
         {
-          var _$table$getSelectedRa5 = $table.getSelectedRanges(),
-              rows = _$table$getSelectedRa5.rows,
-              columns = _$table$getSelectedRa5.columns;
+          var cellAreas = $table.getCellAreas();
 
-          var category = chartParams.category;
+          if (cellAreas.length === 1) {
+            var _cellAreas$5 = cellAreas[0],
+                rows = _cellAreas$5.rows,
+                cols = _cellAreas$5.cols;
+            var category = chartParams.category;
 
-          if (category) {
-            var serieColumns = columns.filter(function (column) {
-              return column.property !== category;
-            });
-            item.disabled = !rows.length || serieColumns.length < 1;
+            if (category) {
+              var serieColumns = cols.filter(function (column) {
+                return column.property !== category;
+              });
+              item.disabled = !rows.length || serieColumns.length < 1;
+            } else {
+              item.disabled = !rows.length || cols.length < 2;
+            }
           } else {
-            item.disabled = !rows.length || columns.length < 2;
+            item.disabled = true;
           }
+
+          break;
         }
-        break;
 
       case 'CHART_PIE':
         {
-          var _$table$getSelectedRa6 = $table.getSelectedRanges(),
-              _rows = _$table$getSelectedRa6.rows,
-              _columns = _$table$getSelectedRa6.columns;
+          var _cellAreas = $table.getCellAreas();
 
-          var _category = chartParams.category;
+          if (_cellAreas.length === 1) {
+            var _cellAreas$6 = _cellAreas[0],
+                _rows = _cellAreas$6.rows,
+                _cols = _cellAreas$6.cols;
+            var _category = chartParams.category;
 
-          if (_category) {
-            var _serieColumns = _columns.filter(function (column) {
-              return column.property !== _category;
-            });
+            if (_category) {
+              var _serieColumns = _cols.filter(function (column) {
+                return column.property !== _category;
+              });
 
-            item.disabled = !_rows.length || _serieColumns.length !== 1;
+              item.disabled = !_rows.length || _serieColumns.length !== 1;
+            } else {
+              item.disabled = !_rows.length || _cols.length !== 2;
+            }
           } else {
-            item.disabled = !_rows.length || _columns.length !== 2;
+            item.disabled = true;
           }
+
+          break;
         }
-        break;
     }
   }
 
   function handleBeforeDestroyEvent(params) {
     var $table = params.$table;
-    var chartModals = $table.chartModals;
+    var $vxe = $table.$vxe,
+        _chartModals = $table._chartModals;
 
-    if (chartModals) {
-      chartModals.slice(0).forEach(function (id) {
-        return _vxetable.modal.close(id);
-      });
+    if (_chartModals) {
+      var modal = $vxe.modal;
+
+      _chartModals.slice(0).reverse().forEach(modal.close);
     }
   }
 
@@ -367,21 +424,14 @@
     });
   }
   /**
-   * 基于 vxe-table 表格的图表渲染插件
+   * 基于 vxe-table pro 的图表渲染插件
    */
 
 
   var VXETablePluginCharts = {
     install: function install(xtable) {
-      var v = xtable.v,
-          interceptor = xtable.interceptor,
+      var interceptor = xtable.interceptor,
           menus = xtable.menus;
-
-      if (v !== 'v2') {
-        throw new Error('[vxe-table-plugin-charts] V2 version is required.');
-      }
-
-      _vxetable = xtable;
       interceptor.add('beforeDestroy', handleBeforeDestroyEvent);
       interceptor.add('event.showMenu', handlePrivilegeEvent);
       menus.mixin(menuMap);
