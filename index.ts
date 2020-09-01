@@ -8,7 +8,6 @@ import {
   MenuLinkParams,
   MenuFirstOption,
   MenuChildOption,
-  ColumnConfig,
   ModalEventParams,
   ModalDefaultSlotParams
 } from 'vxe-table/lib/vxe-table'
@@ -37,7 +36,6 @@ function createChartModal (getOptions: (params: MenuLinkParams) => { [ket: strin
       resize: true,
       mask: false,
       lockView: false,
-      showFooter: false,
       escClosable: true,
       width: 600,
       minWidth: 500,
