@@ -298,43 +298,47 @@ const menuMap = {
 }
 
 function checkPrivilege (item: MenuFirstOption | MenuChildOption, params: InterceptorMenuParams) {
-  const { $table } = params
+  const { $table, column } = params
   const { code, params: chartParams = {} } = item
-  switch (code) {
-    case 'CHART_BAR_X_AXIS':
-    case 'CHART_BAR_Y_AXIS':
-    case 'CHART_LINE': {
-      const cellAreas = $table.getCellAreas()
-      if (cellAreas.length === 1) {
-        const { rows, cols } = cellAreas[0]
-        const { category } = chartParams
-        if (category) {
-          const serieColumns = cols.filter((column) => column.property !== category)
-          item.disabled = !rows.length || serieColumns.length < 1
+  if (column) {
+    switch (code) {
+      case 'CHART_BAR_X_AXIS':
+      case 'CHART_BAR_Y_AXIS':
+      case 'CHART_LINE': {
+        const cellAreas = $table.getCellAreas()
+        if (cellAreas.length === 1) {
+          const { rows, cols } = cellAreas[0]
+          const { category } = chartParams
+          if (category) {
+            const serieColumns = cols.filter((column) => column.property !== category)
+            item.disabled = !rows.length || serieColumns.length < 1
+          } else {
+            item.disabled = !rows.length || cols.length < 2
+          }
         } else {
-          item.disabled = !rows.length || cols.length < 2
+          item.disabled = true
         }
-      } else {
-        item.disabled = true
+        break
       }
-      break
-    }
-    case 'CHART_PIE': {
-      const cellAreas = $table.getCellAreas()
-      if (cellAreas.length === 1) {
-        const { rows, cols } = cellAreas[0]
-        const { category } = chartParams
-        if (category) {
-          const serieColumns = cols.filter((column) => column.property !== category)
-          item.disabled = !rows.length || serieColumns.length !== 1
+      case 'CHART_PIE': {
+        const cellAreas = $table.getCellAreas()
+        if (cellAreas.length === 1) {
+          const { rows, cols } = cellAreas[0]
+          const { category } = chartParams
+          if (category) {
+            const serieColumns = cols.filter((column) => column.property !== category)
+            item.disabled = !rows.length || serieColumns.length !== 1
+          } else {
+            item.disabled = !rows.length || cols.length !== 2
+          }
         } else {
-          item.disabled = !rows.length || cols.length !== 2
+          item.disabled = true
         }
-      } else {
-        item.disabled = true
+        break
       }
-      break
     }
+  } else {
+    item.disabled = true
   }
 }
 
