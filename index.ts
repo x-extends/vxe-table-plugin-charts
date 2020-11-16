@@ -1,43 +1,38 @@
 /* eslint-disable no-unused-vars */
-import { h } from 'vue'
+import { CreateElement } from 'vue'
 import XEUtils from 'xe-utils/ctor'
 import {
-  VXETableInstance,
-  VxeTableDefines,
-  VxeGlobalInterceptorHandles,
-  VxeGlobalMenusHandles,
-  VxeModalOptions,
-  VXETableByVueProperty
+  VXETable,
+  InterceptorParams,
+  InterceptorMenuParams,
+  MenuLinkParams,
+  MenuFirstOption,
+  MenuChildOption,
+  ModalEventParams,
+  ModalDefaultSlotParams
 } from 'vxe-table/lib/vxe-table'
 import * as echarts from 'echarts/lib/echarts'
-
-interface CMItem {
-  id: string;
-  $chart: any;
-}
-
-declare module 'vxe-table/lib/vxe-table' {
-  interface TableInternalData {
-    _chartModals: CMItem[];
-  }
-}
 /* eslint-enable no-unused-vars */
 
-function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenusCallbackParams) => any) {
-  return function (params) {
+declare module 'vxe-table/lib/vxe-table' {
+  interface Table {
+    _chartModals?: string[];
+  }
+  interface Modal {
+    $chart: echarts.ECharts | null;
+  }
+}
+
+function createChartModal (getOptions: (params: MenuLinkParams) => { [ket: string]: any }) {
+  return function (params: MenuLinkParams) {
     const { $table, menu } = params
-    const { instance, internalData } = $table
-    let { _chartModals } = internalData
-    const { modal } = instance.appContext.config.globalProperties.$vxe as VXETableByVueProperty
+    let { $vxe, _chartModals } = $table
+    const { modal } = $vxe
     if (!_chartModals) {
-      _chartModals = internalData._chartModals = []
+      _chartModals = $table._chartModals = []
     }
-    const cmItem: CMItem = {
+    const opts = {
       id: XEUtils.uniqueId(),
-      $chart: null
-    }
-    const opts: VxeModalOptions = {
-      id: cmItem.id,
       resize: true,
       mask: false,
       lockView: false,
@@ -49,7 +44,7 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenusCallb
       title: menu.name,
       className: 'vxe-table--ignore-areas-clear vxe-table--charts',
       slots: {
-        default () {
+        default (params: ModalDefaultSlotParams, h: CreateElement) {
           return [
             h('div', {
               class: 'vxe-chart--wrapper'
@@ -61,38 +56,39 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenusCallb
           ]
         }
       },
-      onShow (evntParams) {
-        const { $modal } = evntParams
-        const { refMaps } = $modal
-        const { refElem } = refMaps
-        const chartElem: HTMLDivElement | null = refElem.value.querySelector('.vxe-chart--wrapper')
-        if (chartElem) {
-          const $chart = echarts.init(chartElem)
-          $chart.setOption(getOptions(params))
-          cmItem.$chart = $chart
-        }
-      },
-      onHide (evntParams) {
-        const { $modal } = evntParams
-        XEUtils.remove(_chartModals, item => item.id === $modal.props.id)
-        if (cmItem.$chart) {
-          cmItem.$chart.dispose()
-          cmItem.$chart = null
-        }
-      },
-      onZoom () {
-        if (cmItem.$chart) {
-          cmItem.$chart.resize()
+      events: {
+        show (evntParams: ModalEventParams) {
+          const { $modal } = evntParams
+          const elem = <HTMLDivElement> $modal.$el.querySelector('.vxe-chart--wrapper')
+          if (elem) {
+            const $chart = echarts.init(elem)
+            $chart.setOption(getOptions(params))
+            $modal.$chart = $chart
+          }
+        },
+        hide (evntParams: ModalEventParams) {
+          const { $modal } = evntParams
+          XEUtils.remove(_chartModals, id => id === $modal.id)
+          if ($modal.$chart) {
+            $modal.$chart.dispose()
+            $modal.$chart = null
+          }
+        },
+        zoom (evntParams: ModalEventParams) {
+          const { $modal } = evntParams
+          if ($modal.$chart) {
+            $modal.$chart.resize()
+          }
         }
       }
     }
-    _chartModals.push(cmItem)
+    _chartModals.push(opts.id)
     modal.open(opts)
-  } as VxeGlobalMenusHandles.MenusCallback
+  }
 }
 
 interface legendOpts {
-  data: any[];
+  data: Array<any>;
 }
 
 const menuMap = {
@@ -299,7 +295,7 @@ const menuMap = {
   })
 }
 
-function checkPrivilege (item: VxeTableDefines.MenuFirstOption | VxeTableDefines.MenuChildOption, params: VxeGlobalInterceptorHandles.InterceptorMenuParams) {
+function checkPrivilege (item: MenuFirstOption | MenuChildOption, params: InterceptorMenuParams) {
   const { $table, column } = params
   const { code, params: chartParams = {} } = item
   if (column) {
@@ -344,19 +340,16 @@ function checkPrivilege (item: VxeTableDefines.MenuFirstOption | VxeTableDefines
   }
 }
 
-function handleBeforeDestroyEvent (params: VxeGlobalInterceptorHandles.InterceptorParams) {
+function handleBeforeDestroyEvent (params: InterceptorParams) {
   const { $table } = params
-  const { instance, internalData } = $table
-  const { _chartModals } = internalData
+  let { $vxe, _chartModals } = $table
   if (_chartModals) {
-    const { modal } = instance.appContext.config.globalProperties.$vxe as VXETableByVueProperty
-    _chartModals.slice(0).reverse().forEach((item) => {
-      modal.close(item.id)
-    })
+    const { modal } = $vxe
+    _chartModals.slice(0).reverse().forEach(modal.close)
   }
 }
 
-function handlePrivilegeEvent (params: VxeGlobalInterceptorHandles.InterceptorMenuParams) {
+function handlePrivilegeEvent (params: InterceptorMenuParams) {
   params.options.forEach((list) => {
     list.forEach((item) => {
       checkPrivilege(item, params)
@@ -373,7 +366,7 @@ function handlePrivilegeEvent (params: VxeGlobalInterceptorHandles.InterceptorMe
  * 基于 vxe-table pro 的图表渲染插件
  */
 export const VXETablePluginCharts = {
-  install  (xtable: VXETableInstance) {
+  install  (xtable: typeof VXETable) {
     const { interceptor, menus } = xtable
     interceptor.add('beforeDestroy', handleBeforeDestroyEvent)
     interceptor.add('event.showMenu', handlePrivilegeEvent)
