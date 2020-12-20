@@ -302,45 +302,45 @@ const menuMap = {
 function checkPrivilege (item: VxeTableDefines.MenuFirstOption | VxeTableDefines.MenuChildOption, params: VxeGlobalInterceptorHandles.InterceptorMenuParams) {
   const { $table, column } = params
   const { code, params: chartParams = {} } = item
-  if (column) {
-    switch (code) {
-      case 'CHART_BAR_X_AXIS':
-      case 'CHART_BAR_Y_AXIS':
-      case 'CHART_LINE': {
+  switch (code) {
+    case 'CHART_BAR_X_AXIS':
+    case 'CHART_BAR_Y_AXIS':
+    case 'CHART_LINE':
+    case 'CHART_PIE': {
+      item.disabled = !column
+      if (column) {
         const cellAreas = $table.getCellAreas()
-        if (cellAreas.length === 1) {
+        const validArea = cellAreas.length === 1
+        item.disabled = !validArea
+        if (validArea) {
           const { rows, cols } = cellAreas[0]
           const { category } = chartParams
-          if (category) {
-            const serieColumns = cols.filter((column) => column.property !== category)
-            item.disabled = !rows.length || serieColumns.length < 1
-          } else {
-            item.disabled = !rows.length || cols.length < 2
+          switch (code) {
+            case 'CHART_BAR_X_AXIS':
+            case 'CHART_BAR_Y_AXIS':
+            case 'CHART_LINE': {
+              if (category) {
+                const serieColumns = cols.filter((column) => column.property !== category)
+                item.disabled = !rows.length || serieColumns.length < 1
+              } else {
+                item.disabled = !rows.length || cols.length < 2
+              }
+              break
+            }
+            case 'CHART_PIE': {
+              if (category) {
+                const serieColumns = cols.filter((column) => column.property !== category)
+                item.disabled = !rows.length || serieColumns.length !== 1
+              } else {
+                item.disabled = !rows.length || cols.length !== 2
+              }
+              break
+            }
           }
-        } else {
-          item.disabled = true
         }
-        break
       }
-      case 'CHART_PIE': {
-        const cellAreas = $table.getCellAreas()
-        if (cellAreas.length === 1) {
-          const { rows, cols } = cellAreas[0]
-          const { category } = chartParams
-          if (category) {
-            const serieColumns = cols.filter((column) => column.property !== category)
-            item.disabled = !rows.length || serieColumns.length !== 1
-          } else {
-            item.disabled = !rows.length || cols.length !== 2
-          }
-        } else {
-          item.disabled = true
-        }
-        break
-      }
+      break
     }
-  } else {
-    item.disabled = true
   }
 }
 
