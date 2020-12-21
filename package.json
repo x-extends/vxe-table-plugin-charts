@@ -1,6 +1,6 @@
 {
   "name": "vxe-table-plugin-charts",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "基于 vxe-table pro 的图表渲染插件",
   "scripts": {
     "lib": "gulp build"

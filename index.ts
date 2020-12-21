@@ -42,6 +42,7 @@ function createChartModal (getOptions: (params: MenuLinkParams) => { [ket: strin
       height: 400,
       minHeight: 300,
       title: menu.name,
+      showZoom: true,
       className: 'vxe-table--ignore-areas-clear vxe-table--charts',
       slots: {
         default (params: ModalDefaultSlotParams, h: CreateElement) {
