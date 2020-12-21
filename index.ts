@@ -98,7 +98,7 @@ const menuMap = {
     const { rows, cols } = cellAreas[0]
     const { params: chartParams = {} } = menu
     const { category } = chartParams
-    const categoryColumn = $table.getColumnByField(category || cols[0].property)
+    const categoryColumn = $table.getColumnByField(category) || cols[0]
     const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
     const legendOpts: legendOpts = {
       data: []
@@ -150,7 +150,7 @@ const menuMap = {
     const { rows, cols } = cellAreas[0]
     const { params: chartParams = {} } = menu
     const { category } = chartParams
-    const categoryColumn = $table.getColumnByField(category || cols[0].property)
+    const categoryColumn = $table.getColumnByField(category) || cols[0]
     const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
     const legendOpts: legendOpts = {
       data: []
@@ -202,7 +202,7 @@ const menuMap = {
     const { rows, cols } = cellAreas[0]
     const { params: chartParams = {} } = menu
     const { category } = chartParams
-    const categoryColumn = $table.getColumnByField(category || cols[0].property)
+    const categoryColumn = $table.getColumnByField(category) || cols[0]
     const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
     const legendOpts: legendOpts = {
       data: []
@@ -250,7 +250,7 @@ const menuMap = {
     const { rows, cols } = cellAreas[0]
     const { params: chartParams = {} } = menu
     const { category } = chartParams
-    const categoryColumn = $table.getColumnByField(category || cols[0].property)
+    const categoryColumn = $table.getColumnByField(category) || cols[0]
     const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
     const serieColumn = serieColumns[0]
     const legendData = rows.map((row) => XEUtils.get(row, categoryColumn.property))
