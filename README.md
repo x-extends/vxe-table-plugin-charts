@@ -1,11 +1,11 @@
 # vxe-table-plugin-charts
 
-[![gitee star](https://gitee.com/xuliangzhan_admin/vxe-table-plugin-charts/badge/star.svg?theme=dark)](https://gitee.com/xuliangzhan_admin/vxe-table-plugin-charts/stargazers)
+[![gitee star](https://gitee.com/x-extends/vxe-table-plugin-charts/badge/star.svg?theme=dark)](https://gitee.com/x-extends/vxe-table-plugin-charts/stargazers)
 [![npm version](https://img.shields.io/npm/v/vxe-table-plugin-charts.svg?style=flat-square)](https://www.npmjs.com/package/vxe-table-plugin-charts)
 [![npm downloads](https://img.shields.io/npm/dm/vxe-table-plugin-charts.svg?style=flat-square)](http://npm-stat.com/charts.html?package=vxe-table-plugin-charts)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
-基于 [vxe-table](https://www.npmjs.com/package/vxe-table) pro 的图表渲染插件
+基于 [vxe-table](https://www.npmjs.com/package/vxe-table) PRO 的图表渲染插件，基于 [echarts](https://github.com/apache/incubator-echarts) 实现
 
 ## Installing
 
@@ -15,6 +15,7 @@ npm install xe-utils vxe-table vxe-table-plugin-charts echarts
 
 ```javascript
 // ...
+import VXETable from 'vxe-table'
 import echarts from 'echarts'
 import VXETablePluginCharts from 'vxe-table-plugin-charts'
 import 'vxe-table-plugin-charts/dist/style.css'

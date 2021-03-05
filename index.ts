@@ -47,6 +47,7 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenusCallb
       height: 400,
       minHeight: 300,
       title: menu.name,
+      showZoom: true,
       className: 'vxe-table--ignore-areas-clear vxe-table--charts',
       slots: {
         default () {
@@ -102,7 +103,7 @@ const menuMap = {
     const { rows, cols } = cellAreas[0]
     const { params: chartParams = {} } = menu
     const { category } = chartParams
-    const categoryColumn = $table.getColumnByField(category || cols[0].property)
+    const categoryColumn = $table.getColumnByField(category) || cols[0]
     const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
     const legendOpts: legendOpts = {
       data: []
@@ -154,7 +155,7 @@ const menuMap = {
     const { rows, cols } = cellAreas[0]
     const { params: chartParams = {} } = menu
     const { category } = chartParams
-    const categoryColumn = $table.getColumnByField(category || cols[0].property)
+    const categoryColumn = $table.getColumnByField(category) || cols[0]
     const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
     const legendOpts: legendOpts = {
       data: []
@@ -206,7 +207,7 @@ const menuMap = {
     const { rows, cols } = cellAreas[0]
     const { params: chartParams = {} } = menu
     const { category } = chartParams
-    const categoryColumn = $table.getColumnByField(category || cols[0].property)
+    const categoryColumn = $table.getColumnByField(category) || cols[0]
     const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
     const legendOpts: legendOpts = {
       data: []
@@ -254,7 +255,7 @@ const menuMap = {
     const { rows, cols } = cellAreas[0]
     const { params: chartParams = {} } = menu
     const { category } = chartParams
-    const categoryColumn = $table.getColumnByField(category || cols[0].property)
+    const categoryColumn = $table.getColumnByField(category) || cols[0]
     const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
     const serieColumn = serieColumns[0]
     const legendData = rows.map((row) => XEUtils.get(row, categoryColumn.property))
