@@ -48,8 +48,9 @@ gulp.task('build_commonjs', function () {
 gulp.task('build_umd', function () {
   return gulp.src(['depend.ts', 'index.ts'])
     .pipe(ts(tsconfig.compilerOptions))
-    .pipe(replace('import XEUtils from \'xe-utils/ctor\';', 'import XEUtils from \'xe-utils\';'))
-    .pipe(replace('import * as echarts from \'echarts/lib/echarts\';', 'import echarts from \'echarts\';'))
+    .pipe(replace(`from 'xe-utils/ctor';`, `from 'xe-utils';`))
+    .pipe(replace(`from 'vxe-table/lib/vxe-table';`, `from 'vxe-table';`))
+    .pipe(replace(`from 'echarts/lib/echarts';`, `from 'echarts';`))
     .pipe(babel({
       moduleId: pack.name,
       presets: ['@babel/env'],
@@ -57,12 +58,13 @@ gulp.task('build_umd', function () {
         globals: {
           [pack.name]: exportModuleName,
           vue: 'Vue',
-          'xe-utils': 'XEUtils'
+          'vxe-table': 'VXETable',
+          'xe-utils': 'XEUtils',
+          'echarts': 'echarts'
         },
         exactGlobals: true
       }]]
     }))
-    .pipe(replace(`global.${exportModuleName} = mod.exports;`, `global.${exportModuleName} = mod.exports.default;`))
     .pipe(rename({
       basename: 'index',
       suffix: '.umd',
