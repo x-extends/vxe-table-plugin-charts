@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { CreateElement } from 'vue'
-import XEUtils from 'xe-utils/ctor'
+import XEUtils from 'xe-utils'
 import {
   VXETable,
   InterceptorParams,
@@ -10,20 +9,19 @@ import {
   MenuChildOption,
   ModalEventParams,
   ModalDefaultSlotParams
-} from 'vxe-table/lib/vxe-table'
+} from 'vxe-table'
 import * as echarts from 'echarts/lib/echarts'
-/* eslint-enable no-unused-vars */
 
-declare module 'vxe-table/lib/vxe-table' {
+declare module 'vxe-table' {
   interface Table {
     _chartModals?: string[];
   }
   interface Modal {
-    $chart: echarts.ECharts | null;
+    $chart: any;
   }
 }
 
-function createChartModal (getOptions: (params: MenuLinkParams) => { [ket: string]: any }) {
+function createChartModal (getOptions: (params: MenuLinkParams) => any) {
   return function (params: MenuLinkParams) {
     const { $table, menu } = params
     let { $vxe, _chartModals } = $table
@@ -86,214 +84,6 @@ function createChartModal (getOptions: (params: MenuLinkParams) => { [ket: strin
     _chartModals.push(opts.id)
     modal.open(opts)
   }
-}
-
-interface legendOpts {
-  data: Array<any>;
-}
-
-const menuMap = {
-  CHART_BAR_X_AXIS: createChartModal((params) => {
-    const { $table, menu } = params
-    const cellAreas = $table.getCellAreas()
-    const { rows, cols } = cellAreas[0]
-    const { params: chartParams = {} } = menu
-    const { category } = chartParams
-    const categoryColumn = $table.getColumnByField(category) || cols[0]
-    const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
-    const legendOpts: legendOpts = {
-      data: []
-    }
-    const seriesOpts: any[] = []
-    const yAxisOpts = {
-      type: 'category',
-      data: rows.map((row) => XEUtils.get(row, categoryColumn.property))
-    }
-    // const seriesLabel = {
-    //   normal: {
-    //     show: true
-    //   }
-    // }
-    serieColumns.forEach((column) => {
-      legendOpts.data.push(column.title)
-      seriesOpts.push({
-        name: column.title,
-        type: 'bar',
-        // label: seriesLabel,
-        data: rows.map((row) => XEUtils.get(row, column.property))
-      })
-    })
-    const option = {
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'shadow'
-        }
-      },
-      grid: {
-        left: '4%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-      },
-      legend: legendOpts,
-      xAxis: {
-        type: 'value'
-      },
-      yAxis: yAxisOpts,
-      series: seriesOpts
-    }
-    return option
-  }),
-  CHART_BAR_Y_AXIS: createChartModal((params) => {
-    const { $table, menu } = params
-    const cellAreas = $table.getCellAreas()
-    const { rows, cols } = cellAreas[0]
-    const { params: chartParams = {} } = menu
-    const { category } = chartParams
-    const categoryColumn = $table.getColumnByField(category) || cols[0]
-    const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
-    const legendOpts: legendOpts = {
-      data: []
-    }
-    const seriesOpts: any[] = []
-    const xAxisOpts = {
-      type: 'category',
-      data: rows.map((row) => XEUtils.get(row, categoryColumn.property))
-    }
-    // const seriesLabel = {
-    //   normal: {
-    //     show: true
-    //   }
-    // }
-    serieColumns.forEach((column) => {
-      legendOpts.data.push(column.title)
-      seriesOpts.push({
-        name: column.title,
-        type: 'bar',
-        // label: seriesLabel,
-        data: rows.map((row) => XEUtils.get(row, column.property))
-      })
-    })
-    const option = {
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-          type: 'shadow'
-        }
-      },
-      grid: {
-        left: '4%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-      },
-      legend: legendOpts,
-      xAxis: xAxisOpts,
-      yAxis: {
-        type: 'value'
-      },
-      series: seriesOpts
-    }
-    return option
-  }),
-  CHART_LINE: createChartModal((params) => {
-    const { $table, menu } = params
-    const cellAreas = $table.getCellAreas()
-    const { rows, cols } = cellAreas[0]
-    const { params: chartParams = {} } = menu
-    const { category } = chartParams
-    const categoryColumn = $table.getColumnByField(category) || cols[0]
-    const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
-    const legendOpts: legendOpts = {
-      data: []
-    }
-    const seriesOpts: any[] = []
-    const xAxisOpts = {
-      type: 'category',
-      data: rows.map((row) => XEUtils.get(row, categoryColumn.property))
-    }
-    serieColumns.forEach((column) => {
-      legendOpts.data.push(column.title)
-      seriesOpts.push({
-        name: column.title,
-        type: 'line',
-        data: rows.map((row) => XEUtils.get(row, column.property))
-      })
-    })
-    const option = {
-      tooltip: {
-        trigger: 'axis'
-      },
-      legend: legendOpts,
-      toolbox: {
-        feature: {
-          saveAsImage: {}
-        }
-      },
-      grid: {
-        left: '4%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-      },
-      xAxis: xAxisOpts,
-      yAxis: {
-        type: 'value'
-      },
-      series: seriesOpts
-    }
-    return option
-  }),
-  CHART_PIE: createChartModal((params) => {
-    const { $table, menu } = params
-    const cellAreas = $table.getCellAreas()
-    const { rows, cols } = cellAreas[0]
-    const { params: chartParams = {} } = menu
-    const { category } = chartParams
-    const categoryColumn = $table.getColumnByField(category) || cols[0]
-    const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
-    const serieColumn = serieColumns[0]
-    const legendData = rows.map((row) => XEUtils.get(row, categoryColumn.property))
-    const seriesData: any[] = []
-    rows.forEach((row) => {
-      seriesData.push({
-        name: XEUtils.get(row, categoryColumn.property),
-        value: XEUtils.get(row, serieColumn.property)
-      })
-    })
-    const option = {
-      tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)'
-      },
-      legend: {
-        type: 'scroll',
-        orient: 'vertical',
-        right: 10,
-        top: 20,
-        bottom: 20,
-        data: legendData
-        // selected: data.selected
-      },
-      grid: {
-        left: '4%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-      },
-      series: [
-        {
-          name: serieColumn.title,
-          type: 'pie',
-          radius: '50%',
-          center: ['40%', '50%'],
-          data: seriesData
-        }
-      ]
-    }
-    return option
-  })
 }
 
 function checkPrivilege (item: MenuFirstOption | MenuChildOption, params: InterceptorMenuParams) {
@@ -363,15 +153,223 @@ function handlePrivilegeEvent (params: InterceptorMenuParams) {
   })
 }
 
+interface legendOpts {
+  data: any[];
+}
+
 /**
  * 基于 vxe-table pro 的图表渲染插件
  */
 export const VXETablePluginCharts = {
   install  (xtable: typeof VXETable) {
     const { interceptor, menus } = xtable
+
+    menus.mixin({
+      CHART_BAR_X_AXIS: createChartModal((params) => {
+        const { $table, menu } = params
+        const cellAreas = $table.getCellAreas()
+        const { rows, cols } = cellAreas[0]
+        const { params: chartParams = {} } = menu
+        const { category } = chartParams
+        const categoryColumn = $table.getColumnByField(category) || cols[0]
+        const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
+        const legendOpts: legendOpts = {
+          data: []
+        }
+        const seriesOpts: any[] = []
+        const yAxisOpts = {
+          type: 'category',
+          data: rows.map((row) => XEUtils.get(row, categoryColumn.property))
+        }
+        // const seriesLabel = {
+        //   normal: {
+        //     show: true
+        //   }
+        // }
+        serieColumns.forEach((column) => {
+          legendOpts.data.push(column.title)
+          seriesOpts.push({
+            name: column.title,
+            type: 'bar',
+            // label: seriesLabel,
+            data: rows.map((row) => XEUtils.get(row, column.property))
+          })
+        })
+        const option = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          grid: {
+            left: '4%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          legend: legendOpts,
+          xAxis: {
+            type: 'value'
+          },
+          yAxis: yAxisOpts,
+          series: seriesOpts
+        }
+        return option
+      }),
+      CHART_BAR_Y_AXIS: createChartModal((params) => {
+        const { $table, menu } = params
+        const cellAreas = $table.getCellAreas()
+        const { rows, cols } = cellAreas[0]
+        const { params: chartParams = {} } = menu
+        const { category } = chartParams
+        const categoryColumn = $table.getColumnByField(category) || cols[0]
+        const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
+        const legendOpts: legendOpts = {
+          data: []
+        }
+        const seriesOpts: any[] = []
+        const xAxisOpts = {
+          type: 'category',
+          data: rows.map((row) => XEUtils.get(row, categoryColumn.property))
+        }
+        // const seriesLabel = {
+        //   normal: {
+        //     show: true
+        //   }
+        // }
+        serieColumns.forEach((column) => {
+          legendOpts.data.push(column.title)
+          seriesOpts.push({
+            name: column.title,
+            type: 'bar',
+            // label: seriesLabel,
+            data: rows.map((row) => XEUtils.get(row, column.property))
+          })
+        })
+        const option = {
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+              type: 'shadow'
+            }
+          },
+          grid: {
+            left: '4%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          legend: legendOpts,
+          xAxis: xAxisOpts,
+          yAxis: {
+            type: 'value'
+          },
+          series: seriesOpts
+        }
+        return option
+      }),
+      CHART_LINE: createChartModal((params) => {
+        const { $table, menu } = params
+        const cellAreas = $table.getCellAreas()
+        const { rows, cols } = cellAreas[0]
+        const { params: chartParams = {} } = menu
+        const { category } = chartParams
+        const categoryColumn = $table.getColumnByField(category) || cols[0]
+        const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
+        const legendOpts: legendOpts = {
+          data: []
+        }
+        const seriesOpts: any[] = []
+        const xAxisOpts = {
+          type: 'category',
+          data: rows.map((row) => XEUtils.get(row, categoryColumn.property))
+        }
+        serieColumns.forEach((column) => {
+          legendOpts.data.push(column.title)
+          seriesOpts.push({
+            name: column.title,
+            type: 'line',
+            data: rows.map((row) => XEUtils.get(row, column.property))
+          })
+        })
+        const option = {
+          tooltip: {
+            trigger: 'axis'
+          },
+          legend: legendOpts,
+          toolbox: {
+            feature: {
+              saveAsImage: {}
+            }
+          },
+          grid: {
+            left: '4%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          xAxis: xAxisOpts,
+          yAxis: {
+            type: 'value'
+          },
+          series: seriesOpts
+        }
+        return option
+      }),
+      CHART_PIE: createChartModal((params) => {
+        const { $table, menu } = params
+        const cellAreas = $table.getCellAreas()
+        const { rows, cols } = cellAreas[0]
+        const { params: chartParams = {} } = menu
+        const { category } = chartParams
+        const categoryColumn = $table.getColumnByField(category) || cols[0]
+        const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
+        const serieColumn = serieColumns[0]
+        const legendData = rows.map((row) => XEUtils.get(row, categoryColumn.property))
+        const seriesData: any[] = []
+        rows.forEach((row) => {
+          seriesData.push({
+            name: XEUtils.get(row, categoryColumn.property),
+            value: XEUtils.get(row, serieColumn.property)
+          })
+        })
+        const option = {
+          tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+          },
+          legend: {
+            type: 'scroll',
+            orient: 'vertical',
+            right: 10,
+            top: 20,
+            bottom: 20,
+            data: legendData
+            // selected: data.selected
+          },
+          grid: {
+            left: '4%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+          },
+          series: [
+            {
+              name: serieColumn.title,
+              type: 'pie',
+              radius: '50%',
+              center: ['40%', '50%'],
+              data: seriesData
+            }
+          ]
+        }
+        return option
+      })
+    })
+    
     interceptor.add('beforeDestroy', handleBeforeDestroyEvent)
     interceptor.add('event.showMenu', handlePrivilegeEvent)
-    menus.mixin(menuMap)
   }
 }
 
