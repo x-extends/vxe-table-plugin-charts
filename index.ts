@@ -1,12 +1,6 @@
 import { h } from 'vue'
 import XEUtils from 'xe-utils'
-import {
-  VXETableCore,
-  VxeTableDefines,
-  VxeGlobalInterceptorHandles,
-  VxeGlobalMenusHandles,
-  VxeModalOptions
-} from 'vxe-table/lib/vxe-table'
+import { VXETableCore, VxeTableDefines, VxeGlobalInterceptorHandles, VxeGlobalMenusHandles, VxeModalOptions } from 'vxe-table'
 import echarts from 'echarts/lib/echarts'
 
 let vxetable: VXETableCore
@@ -16,7 +10,7 @@ interface CMItem {
   $chart: any;
 }
 
-declare module 'vxe-table/lib/vxe-table' {
+declare module 'vxe-table' {
   interface TableInternalData {
     _chartModals: CMItem[];
   }

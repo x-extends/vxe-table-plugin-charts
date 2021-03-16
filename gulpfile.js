@@ -48,8 +48,6 @@ gulp.task('build_commonjs', function () {
 gulp.task('build_umd', function () {
   return gulp.src(['index.ts'])
     .pipe(ts(tsconfig.compilerOptions))
-    .pipe(replace(`from 'xe-utils/ctor';`, `from 'xe-utils';`))
-    .pipe(replace(`from 'vxe-table/lib/vxe-table';`, `from 'vxe-table';`))
     .pipe(replace(`from 'echarts/lib/echarts';`, `from 'echarts';`))
     .pipe(babel({
       moduleId: pack.name,
