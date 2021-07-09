@@ -301,11 +301,6 @@ export const VXETablePluginCharts = {
             trigger: 'axis'
           },
           legend: legendOpts,
-          toolbox: {
-            feature: {
-              saveAsImage: {}
-            }
-          },
           grid: {
             left: '4%',
             right: '4%',
