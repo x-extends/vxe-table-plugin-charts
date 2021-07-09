@@ -13,6 +13,7 @@ import {
 import * as echarts from 'echarts/lib/echarts'
 
 declare module 'vxe-table' {
+  /* eslint-disable no-unused-vars */
   interface Table {
     _chartModals?: string[];
   }
@@ -82,7 +83,9 @@ function createChartModal (getOptions: (params: MenuLinkParams) => any) {
       }
     }
     _chartModals.push(opts.id)
-    modal.open(opts)
+    if (modal) {
+      modal.open(opts)
+    }
   }
 }
 
@@ -133,7 +136,7 @@ function checkPrivilege (item: MenuFirstOption | MenuChildOption, params: Interc
 
 function handleBeforeDestroyEvent (params: InterceptorParams) {
   const { $table } = params
-  let { $vxe, _chartModals } = $table
+  const { $vxe, _chartModals } = $table
   if (_chartModals) {
     const { modal } = $vxe
     _chartModals.slice(0).reverse().forEach(modal.close)
@@ -367,7 +370,7 @@ export const VXETablePluginCharts = {
         return option
       })
     })
-    
+
     interceptor.add('beforeDestroy', handleBeforeDestroyEvent)
     interceptor.add('event.showMenu', handlePrivilegeEvent)
   }

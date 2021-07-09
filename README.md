@@ -63,11 +63,11 @@ VXETable.use(VXETablePluginCharts)
   :mouse-config="{ area: true }"
   :context-menu="{body: {options: bodyMenus}}"
   :edit-config="{trigger: 'dblclick', mode: 'cell'}">
-  <vxe-table-column type="seq" width="60"></vxe-table-column>
-  <vxe-table-column field="nickname" title="Nickname" :edit-render="{name: 'input'}"></vxe-table-column>
-  <vxe-table-column field="sex" title="sex" :edit-render="{name: 'input'}"></vxe-table-column>
-  <vxe-table-column field="age" title="Age" :edit-render="{name: 'input'}"></vxe-table-column>
-  <vxe-table-column field="rate" title="Rate" :edit-render="{name: 'input'}"></vxe-table-column>
+  <vxe-column type="seq" width="60"></vxe-column>
+  <vxe-column field="nickname" title="Nickname" :edit-render="{name: 'input'}"></vxe-column>
+  <vxe-column field="sex" title="sex" :edit-render="{name: 'input'}"></vxe-column>
+  <vxe-column field="age" title="Age" :edit-render="{name: 'input'}"></vxe-column>
+  <vxe-column field="rate" title="Rate" :edit-render="{name: 'input'}"></vxe-column>
 </vxe-table>
 ```
 
