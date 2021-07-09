@@ -55,7 +55,7 @@ gulp.task('build_umd', function () {
       plugins: [['@babel/transform-modules-umd', {
         globals: {
           [pack.name]: exportModuleName,
-          vue: 'Vue',
+          'vue': 'Vue',
           'vxe-table': 'VXETable',
           'xe-utils': 'XEUtils',
           'echarts': 'echarts'

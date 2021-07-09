@@ -1,6 +1,6 @@
 import { h } from 'vue'
 import XEUtils from 'xe-utils'
-import { VXETableCore, VxeTableDefines, VxeGlobalInterceptorHandles, VxeGlobalMenusHandles, VxeModalOptions } from 'vxe-table'
+import { VXETableCore, VxeTableDefines, VxeGlobalInterceptorHandles, VxeGlobalMenusHandles } from 'vxe-table'
 import echarts from 'echarts/lib/echarts'
 
 let vxetable: VXETableCore
@@ -18,6 +18,7 @@ declare module 'vxe-table' {
 
 function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenusCallbackParams) => any) {
   return function (params) {
+    const { modal } = vxetable
     const { $table, menu } = params
     const { internalData } = $table
     let { _chartModals } = internalData
@@ -28,58 +29,59 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenusCallb
       id: XEUtils.uniqueId(),
       $chart: null
     }
-    const opts: VxeModalOptions = {
-      id: cmItem.id,
-      resize: true,
-      mask: false,
-      lockView: false,
-      escClosable: true,
-      width: 600,
-      minWidth: 500,
-      height: 400,
-      minHeight: 300,
-      title: menu.name,
-      showZoom: true,
-      className: 'vxe-table--ignore-areas-clear vxe-table--charts',
-      slots: {
-        default () {
-          return [
-            h('div', {
-              class: 'vxe-chart--wrapper'
-            }, [
-              h('div', {
-                class: 'vxe-chart--panel'
-              })
-            ])
-          ]
-        }
-      },
-      onShow (evntParams) {
-        const { $modal } = evntParams
-        const { refElem } = $modal.getRefMaps()
-        const chartElem: HTMLDivElement | null = refElem.value.querySelector('.vxe-chart--wrapper')
-        if (chartElem) {
-          const $chart = echarts.init(chartElem)
-          $chart.setOption(getOptions(params))
-          cmItem.$chart = $chart
-        }
-      },
-      onHide (evntParams) {
-        const { $modal } = evntParams
-        XEUtils.remove(_chartModals, item => item.id === $modal.props.id)
-        if (cmItem.$chart) {
-          cmItem.$chart.dispose()
-          cmItem.$chart = null
-        }
-      },
-      onZoom () {
-        if (cmItem.$chart) {
-          cmItem.$chart.resize()
-        }
-      }
-    }
     _chartModals.push(cmItem)
-    vxetable.modal.open(opts)
+    if (modal) {
+      modal.open({
+        id: cmItem.id,
+        resize: true,
+        mask: false,
+        lockView: false,
+        escClosable: true,
+        width: 600,
+        minWidth: 500,
+        height: 400,
+        minHeight: 300,
+        title: menu.name,
+        showZoom: true,
+        className: 'vxe-table--ignore-areas-clear vxe-table--charts',
+        slots: {
+          default () {
+            return [
+              h('div', {
+                class: 'vxe-chart--wrapper'
+              }, [
+                h('div', {
+                  class: 'vxe-chart--panel'
+                })
+              ])
+            ]
+          }
+        },
+        onShow (evntParams) {
+          const { $modal } = evntParams
+          const { refElem } = $modal.getRefMaps()
+          const chartElem: HTMLDivElement | null = refElem.value.querySelector('.vxe-chart--wrapper')
+          if (chartElem) {
+            const $chart = echarts.init(chartElem)
+            $chart.setOption(getOptions(params))
+            cmItem.$chart = $chart
+          }
+        },
+        onHide (evntParams) {
+          const { $modal } = evntParams
+          XEUtils.remove(_chartModals, item => item.id === $modal.props.id)
+          if (cmItem.$chart) {
+            cmItem.$chart.dispose()
+            cmItem.$chart = null
+          }
+        },
+        onZoom () {
+          if (cmItem.$chart) {
+            cmItem.$chart.resize()
+          }
+        }
+      })
+    }
   } as VxeGlobalMenusHandles.MenusCallback
 }
 
@@ -221,11 +223,6 @@ const menuMap = {
         trigger: 'axis'
       },
       legend: legendOpts,
-      toolbox: {
-        feature: {
-          saveAsImage: {}
-        }
-      },
       grid: {
         left: '4%',
         right: '4%',
@@ -337,12 +334,13 @@ function checkPrivilege (item: VxeTableDefines.MenuFirstOption | VxeTableDefines
 }
 
 function handleBeforeDestroyEvent (params: VxeGlobalInterceptorHandles.InterceptorParams) {
+  const { modal } = vxetable
   const { $table } = params
   const { internalData } = $table
   const { _chartModals } = internalData
-  if (_chartModals) {
+  if (_chartModals && modal) {
     _chartModals.slice(0).reverse().forEach((item) => {
-      vxetable.modal.close(item.id)
+      modal.close(item.id)
     })
   }
 }
