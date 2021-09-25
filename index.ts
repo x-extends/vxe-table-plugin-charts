@@ -364,7 +364,7 @@ function handlePrivilegeEvent (params: VxeGlobalInterceptorHandles.InterceptorSh
 export const VXETablePluginCharts = {
   install (vxetablecore: VXETableCore) {
     const { interceptor, menus } = vxetablecore
-    
+
     vxetable = vxetablecore
 
     interceptor.add('unmounted', handleBeforeDestroyEvent)
