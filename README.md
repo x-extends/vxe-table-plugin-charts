@@ -10,7 +10,7 @@
 ## Installing
 
 ```shell
-npm install xe-utils@3 vxe-table vxe-table-plugin-charts echarts
+npm install xe-utils vxe-table@next vxe-table-plugin-charts@next echarts
 ```
 
 ```javascript
