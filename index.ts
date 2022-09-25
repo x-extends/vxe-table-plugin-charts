@@ -97,14 +97,14 @@ const menuMap = {
     const { params: chartParams = {} } = menu
     const { category } = chartParams
     const categoryColumn = $table.getColumnByField(category) || cols[0]
-    const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
+    const serieColumns = cols.filter((column) => column.field !== categoryColumn.field)
     const legendOpts: legendOpts = {
       data: []
     }
     const seriesOpts: any[] = []
     const yAxisOpts = {
       type: 'category',
-      data: rows.map((row) => XEUtils.get(row, categoryColumn.property))
+      data: rows.map((row) => XEUtils.get(row, categoryColumn.field))
     }
     // const seriesLabel = {
     //   normal: {
@@ -117,7 +117,7 @@ const menuMap = {
         name: column.title,
         type: 'bar',
         // label: seriesLabel,
-        data: rows.map((row) => XEUtils.get(row, column.property))
+        data: rows.map((row) => XEUtils.get(row, column.field))
       })
     })
     const option = {
@@ -149,14 +149,14 @@ const menuMap = {
     const { params: chartParams = {} } = menu
     const { category } = chartParams
     const categoryColumn = $table.getColumnByField(category) || cols[0]
-    const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
+    const serieColumns = cols.filter((column) => column.field !== categoryColumn.field)
     const legendOpts: legendOpts = {
       data: []
     }
     const seriesOpts: any[] = []
     const xAxisOpts = {
       type: 'category',
-      data: rows.map((row) => XEUtils.get(row, categoryColumn.property))
+      data: rows.map((row) => XEUtils.get(row, categoryColumn.field))
     }
     // const seriesLabel = {
     //   normal: {
@@ -169,7 +169,7 @@ const menuMap = {
         name: column.title,
         type: 'bar',
         // label: seriesLabel,
-        data: rows.map((row) => XEUtils.get(row, column.property))
+        data: rows.map((row) => XEUtils.get(row, column.field))
       })
     })
     const option = {
@@ -201,21 +201,21 @@ const menuMap = {
     const { params: chartParams = {} } = menu
     const { category } = chartParams
     const categoryColumn = $table.getColumnByField(category) || cols[0]
-    const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
+    const serieColumns = cols.filter((column) => column.field !== categoryColumn.field)
     const legendOpts: legendOpts = {
       data: []
     }
     const seriesOpts: any[] = []
     const xAxisOpts = {
       type: 'category',
-      data: rows.map((row) => XEUtils.get(row, categoryColumn.property))
+      data: rows.map((row) => XEUtils.get(row, categoryColumn.field))
     }
     serieColumns.forEach((column) => {
       legendOpts.data.push(column.title)
       seriesOpts.push({
         name: column.title,
         type: 'line',
-        data: rows.map((row) => XEUtils.get(row, column.property))
+        data: rows.map((row) => XEUtils.get(row, column.field))
       })
     })
     const option = {
@@ -244,14 +244,14 @@ const menuMap = {
     const { params: chartParams = {} } = menu
     const { category } = chartParams
     const categoryColumn = $table.getColumnByField(category) || cols[0]
-    const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
+    const serieColumns = cols.filter((column) => column.field !== categoryColumn.field)
     const serieColumn = serieColumns[0]
-    const legendData = rows.map((row) => XEUtils.get(row, categoryColumn.property))
+    const legendData = rows.map((row) => XEUtils.get(row, categoryColumn.field))
     const seriesData: any[] = []
     rows.forEach((row) => {
       seriesData.push({
-        name: XEUtils.get(row, categoryColumn.property),
-        value: XEUtils.get(row, serieColumn.property)
+        name: XEUtils.get(row, categoryColumn.field),
+        value: XEUtils.get(row, serieColumn.field)
       })
     })
     const option = {
@@ -309,7 +309,7 @@ function checkPrivilege (item: VxeTableDefines.MenuFirstOption | VxeTableDefines
             case 'CHART_BAR_Y_AXIS':
             case 'CHART_LINE': {
               if (category) {
-                const serieColumns = cols.filter((column) => column.property !== category)
+                const serieColumns = cols.filter((column) => column.field !== category)
                 item.disabled = !rows.length || serieColumns.length < 1
               } else {
                 item.disabled = !rows.length || cols.length < 2
@@ -318,7 +318,7 @@ function checkPrivilege (item: VxeTableDefines.MenuFirstOption | VxeTableDefines
             }
             case 'CHART_PIE': {
               if (category) {
-                const serieColumns = cols.filter((column) => column.property !== category)
+                const serieColumns = cols.filter((column) => column.field !== category)
                 item.disabled = !rows.length || serieColumns.length !== 1
               } else {
                 item.disabled = !rows.length || cols.length !== 2
