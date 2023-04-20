@@ -7,6 +7,10 @@
 
 基于 [vxe-table](https://www.npmjs.com/package/vxe-table) PRO 的图表渲染插件，基于 [echarts](https://github.com/apache/incubator-echarts) 实现
 
+## Compatibility
+
+对应 vxe-table v4 版本  
+
 ## Installing
 
 ```shell
