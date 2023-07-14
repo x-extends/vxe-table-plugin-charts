@@ -7,6 +7,10 @@
 
 基于 [vxe-table](https://www.npmjs.com/package/vxe-table) PRO 的图表渲染插件
 
+## Compatibility
+
+对应 vxe-table v3 版本  
+
 ## Installing
 
 ```shell
