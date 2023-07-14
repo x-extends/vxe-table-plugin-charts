@@ -11,7 +11,7 @@ interface CMItem {
 }
 
 declare module 'vxe-table' {
-  interface TableInternalData {
+  export interface TableInternalData {
     _chartModals: CMItem[];
   }
 }
