@@ -16,73 +16,76 @@ declare module 'vxe-table' {
   }
 }
 
-function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenusCallbackParams) => any) {
-  return function (params) {
-    const { modal } = vxetable
-    const { $table, menu } = params
-    const { internalData } = $table
-    let { _chartModals } = internalData
-    if (!_chartModals) {
-      _chartModals = internalData._chartModals = []
-    }
-    const cmItem: CMItem = {
-      id: XEUtils.uniqueId(),
-      $chart: null
-    }
-    _chartModals.push(cmItem)
-    if (modal) {
-      modal.open({
-        id: cmItem.id,
-        resize: true,
-        mask: false,
-        lockView: false,
-        escClosable: true,
-        width: 600,
-        minWidth: 500,
-        height: 400,
-        minHeight: 300,
-        title: menu.name,
-        showZoom: true,
-        className: 'vxe-table--ignore-areas-clear vxe-table--charts',
-        slots: {
-          default () {
-            return [
-              h('div', {
-                class: 'vxe-chart--wrapper'
-              }, [
+function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethodParams) => any) {
+  const menuOpts: VxeGlobalMenusHandles.MenusOption = {
+    menuMethod (params) {
+      const { modal } = vxetable
+      const { $table, menu } = params
+      const { internalData } = $table
+      let { _chartModals } = internalData
+      if (!_chartModals) {
+        _chartModals = internalData._chartModals = []
+      }
+      const cmItem: CMItem = {
+        id: XEUtils.uniqueId(),
+        $chart: null
+      }
+      _chartModals.push(cmItem)
+      if (modal) {
+        modal.open({
+          id: cmItem.id,
+          resize: true,
+          mask: false,
+          lockView: false,
+          escClosable: true,
+          width: 600,
+          minWidth: 500,
+          height: 400,
+          minHeight: 300,
+          title: menu.name,
+          showZoom: true,
+          className: 'vxe-table--ignore-areas-clear vxe-table--charts',
+          slots: {
+            default () {
+              return [
                 h('div', {
-                  class: 'vxe-chart--panel'
-                })
-              ])
-            ]
+                  class: 'vxe-chart--wrapper'
+                }, [
+                  h('div', {
+                    class: 'vxe-chart--panel'
+                  })
+                ])
+              ]
+            }
+          },
+          onShow (evntParams) {
+            const { $modal } = evntParams
+            const { refElem } = $modal.getRefMaps()
+            const chartElem: HTMLDivElement | null = refElem.value.querySelector('.vxe-chart--wrapper')
+            if (chartElem) {
+              const $chart = echarts.init(chartElem)
+              $chart.setOption(getOptions(params))
+              cmItem.$chart = $chart
+            }
+          },
+          onHide (evntParams) {
+            const { $modal } = evntParams
+            XEUtils.remove(_chartModals, item => item.id === $modal.props.id)
+            if (cmItem.$chart) {
+              cmItem.$chart.dispose()
+              cmItem.$chart = null
+            }
+          },
+          onZoom () {
+            if (cmItem.$chart) {
+              cmItem.$chart.resize()
+            }
           }
-        },
-        onShow (evntParams) {
-          const { $modal } = evntParams
-          const { refElem } = $modal.getRefMaps()
-          const chartElem: HTMLDivElement | null = refElem.value.querySelector('.vxe-chart--wrapper')
-          if (chartElem) {
-            const $chart = echarts.init(chartElem)
-            $chart.setOption(getOptions(params))
-            cmItem.$chart = $chart
-          }
-        },
-        onHide (evntParams) {
-          const { $modal } = evntParams
-          XEUtils.remove(_chartModals, item => item.id === $modal.props.id)
-          if (cmItem.$chart) {
-            cmItem.$chart.dispose()
-            cmItem.$chart = null
-          }
-        },
-        onZoom () {
-          if (cmItem.$chart) {
-            cmItem.$chart.resize()
-          }
-        }
-      })
+        })
+      }
     }
-  } as VxeGlobalMenusHandles.MenusCallback
+  }
+  return menuOpts
 }
 
 interface legendOpts {
