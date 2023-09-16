@@ -4,7 +4,9 @@ const uglify = require('gulp-uglify')
 const babel = require('gulp-babel')
 const rename = require('gulp-rename')
 const replace = require('gulp-replace')
-const sass = require('gulp-sass')
+const dartSass = require('sass')
+const gulpSass = require('gulp-sass')
+const sass = gulpSass(dartSass)
 const cleanCSS = require('gulp-clean-css')
 const prefixer = require('gulp-autoprefixer')
 const sourcemaps = require('gulp-sourcemaps')
@@ -16,7 +18,7 @@ const exportModuleName = 'VXETablePluginCharts'
 
 gulp.task('build_style', function () {
   return gulp.src('style.scss')
-    .pipe(sass())
+    .pipe(sass(dartSass))
     .pipe(prefixer({
       borwsers: ['last 1 version', '> 1%', 'not ie <= 8'],
       cascade: true,
@@ -48,8 +50,8 @@ gulp.task('build_commonjs', function () {
 gulp.task('build_umd', function () {
   return gulp.src(['index.ts'])
     .pipe(ts(tsconfig.compilerOptions))
-    .pipe(replace(`import XEUtils from 'xe-utils/ctor';`, `import XEUtils from 'xe-utils';`))
-    .pipe(replace(`import * echarts from 'echarts/lib/echarts';`, `import * echarts from 'echarts';`))
+    .pipe(replace('import XEUtils from \'xe-utils/ctor\';', 'import XEUtils from \'xe-utils\';'))
+    .pipe(replace('import * echarts from \'echarts/lib/echarts\';', 'import * echarts from \'echarts\';'))
     .pipe(babel({
       moduleId: pack.name,
       presets: ['@babel/env'],

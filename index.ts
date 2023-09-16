@@ -4,11 +4,11 @@ import {
   VXETable,
   InterceptorParams,
   InterceptorMenuParams,
-  MenuLinkParams,
   MenuFirstOption,
   MenuChildOption,
   ModalEventParams,
-  ModalDefaultSlotParams
+  ModalDefaultSlotParams,
+  VxeGlobalMenusHandles
 } from 'vxe-table'
 import * as echarts from 'echarts/lib/echarts'
 
@@ -22,69 +22,71 @@ declare module 'vxe-table' {
   }
 }
 
-function createChartModal (getOptions: (params: MenuLinkParams) => any) {
-  return function (params: MenuLinkParams) {
-    const { $table, menu } = params
-    let { $vxe, _chartModals } = $table
-    const { modal } = $vxe
-    if (!_chartModals) {
-      _chartModals = $table._chartModals = []
-    }
-    const opts = {
-      id: XEUtils.uniqueId(),
-      resize: true,
-      mask: false,
-      lockView: false,
-      escClosable: true,
-      width: 600,
-      minWidth: 500,
-      height: 400,
-      minHeight: 300,
-      title: menu.name,
-      showZoom: true,
-      className: 'vxe-table--ignore-areas-clear vxe-table--charts',
-      slots: {
-        default (params: ModalDefaultSlotParams, h: CreateElement) {
-          return [
-            h('div', {
-              class: 'vxe-chart--wrapper'
-            }, [
+function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethodParams) => any) {
+  return {
+    menuMethod (params: VxeGlobalMenusHandles.MenuMethodParams) {
+      const { $table, menu } = params
+      let { $vxe, _chartModals } = $table
+      const { modal } = $vxe
+      if (!_chartModals) {
+        _chartModals = $table._chartModals = []
+      }
+      const opts = {
+        id: XEUtils.uniqueId(),
+        resize: true,
+        mask: false,
+        lockView: false,
+        escClosable: true,
+        width: 600,
+        minWidth: 500,
+        height: 400,
+        minHeight: 300,
+        title: menu.name,
+        showZoom: true,
+        className: 'vxe-table--ignore-areas-clear vxe-table--charts',
+        slots: {
+          default (params: ModalDefaultSlotParams, h: CreateElement) {
+            return [
               h('div', {
-                class: 'vxe-chart--panel'
-              })
-            ])
-          ]
-        }
-      },
-      events: {
-        show (evntParams: ModalEventParams) {
-          const { $modal } = evntParams
-          const elem = <HTMLDivElement> $modal.$el.querySelector('.vxe-chart--wrapper')
-          if (elem) {
-            const $chart = echarts.init(elem)
-            $chart.setOption(getOptions(params))
-            $modal.$chart = $chart
+                class: 'vxe-chart--wrapper'
+              }, [
+                h('div', {
+                  class: 'vxe-chart--panel'
+                })
+              ])
+            ]
           }
         },
-        hide (evntParams: ModalEventParams) {
-          const { $modal } = evntParams
-          XEUtils.remove(_chartModals, id => id === $modal.id)
-          if ($modal.$chart) {
-            $modal.$chart.dispose()
-            $modal.$chart = null
-          }
-        },
-        zoom (evntParams: ModalEventParams) {
-          const { $modal } = evntParams
-          if ($modal.$chart) {
-            $modal.$chart.resize()
+        events: {
+          show (evntParams: ModalEventParams) {
+            const { $modal } = evntParams
+            const elem = <HTMLDivElement> $modal.$el.querySelector('.vxe-chart--wrapper')
+            if (elem) {
+              const $chart = echarts.init(elem)
+              $chart.setOption(getOptions(params))
+              $modal.$chart = $chart
+            }
+          },
+          hide (evntParams: ModalEventParams) {
+            const { $modal } = evntParams
+            XEUtils.remove(_chartModals, id => id === $modal.id)
+            if ($modal.$chart) {
+              $modal.$chart.dispose()
+              $modal.$chart = null
+            }
+          },
+          zoom (evntParams: ModalEventParams) {
+            const { $modal } = evntParams
+            if ($modal.$chart) {
+              $modal.$chart.resize()
+            }
           }
         }
       }
-    }
-    _chartModals.push(opts.id)
-    if (modal) {
-      modal.open(opts)
+      _chartModals.push(opts.id)
+      if (modal) {
+        modal.open(opts)
+      }
     }
   }
 }
@@ -165,7 +167,12 @@ interface legendOpts {
  */
 export const VXETablePluginCharts = {
   install  (xtable: typeof VXETable) {
-    const { interceptor, menus } = xtable
+    const { interceptor, menus, version } = xtable
+
+    // 检查版本
+    if (!/^(2|3)\./.test(version)) {
+      console.error('[vxe-table-plugin-charts] Version vxe-table 3.x is required')
+    }
 
     menus.mixin({
       CHART_BAR_X_AXIS: createChartModal((params) => {
