@@ -3,7 +3,7 @@ import XEUtils from 'xe-utils'
 import { VXETableCore, VxeTableDefines, VxeGlobalInterceptorHandles, VxeGlobalMenusHandles } from 'vxe-table'
 import echarts from 'echarts/lib/echarts'
 
-let vxetable: VXETableCore
+let VXETableInstance: VXETableCore
 
 interface CMItem {
   id: string;
@@ -19,7 +19,6 @@ declare module 'vxe-table' {
 function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethodParams) => any) {
   const menuOpts: VxeGlobalMenusHandles.MenusOption = {
     menuMethod (params) {
-      const { modal } = vxetable
       const { $table, menu } = params
       const { internalData } = $table
       let { _chartModals } = internalData
@@ -31,8 +30,8 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethod
         $chart: null
       }
       _chartModals.push(cmItem)
-      if (modal) {
-        modal.open({
+      if (VXETableInstance.modal) {
+        VXETableInstance.modal.open({
           id: cmItem.id,
           resize: true,
           mask: false,
@@ -337,13 +336,12 @@ function checkPrivilege (item: VxeTableDefines.MenuFirstOption | VxeTableDefines
 }
 
 function handleBeforeDestroyEvent (params: VxeGlobalInterceptorHandles.InterceptorParams) {
-  const { modal } = vxetable
   const { $table } = params
   const { internalData } = $table
   const { _chartModals } = internalData
-  if (_chartModals && modal) {
+  if (_chartModals && VXETableInstance.modal) {
     _chartModals.slice(0).reverse().forEach((item) => {
-      modal.close(item.id)
+      VXETableInstance.modal.close(item.id)
     })
   }
 }
@@ -362,17 +360,19 @@ function handlePrivilegeEvent (params: VxeGlobalInterceptorHandles.InterceptorSh
 }
 
 /**
- * 基于 vxe-table pro 的图表渲染插件
+ * 基于 vxe-table 表格的扩展插件，支持渲染 echarts 图表
  */
 export const VXETablePluginCharts = {
-  install (vxetablecore: VXETableCore) {
-    const { interceptor, menus } = vxetablecore
+  install (vxetable: VXETableCore) {
+    VXETableInstance = vxetable
+    // 检查版本
+    if (!/^(4)\./.test(vxetable.version)) {
+      console.error('[vxe-table-plugin-charts] Version vxe-table 4.x is required')
+    }
 
-    vxetable = vxetablecore
-
-    interceptor.add('unmounted', handleBeforeDestroyEvent)
-    interceptor.add('event.showMenu', handlePrivilegeEvent)
-    menus.mixin(menuMap)
+    vxetable.interceptor.add('unmounted', handleBeforeDestroyEvent)
+    vxetable.interceptor.add('event.showMenu', handlePrivilegeEvent)
+    vxetable.menus.mixin(menuMap)
   }
 }
 
