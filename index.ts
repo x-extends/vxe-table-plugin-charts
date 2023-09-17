@@ -1,7 +1,7 @@
 import { CreateElement } from 'vue'
 import XEUtils from 'xe-utils'
 import {
-  VXETable,
+  VXETableCore,
   InterceptorParams,
   InterceptorMenuParams,
   MenuFirstOption,
@@ -22,12 +22,13 @@ declare module 'vxe-table' {
   }
 }
 
+let VXETableInstance: VXETableCore
+
 function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethodParams) => any) {
   return {
     menuMethod (params: VxeGlobalMenusHandles.MenuMethodParams) {
       const { $table, menu } = params
-      let { $vxe, _chartModals } = $table
-      const { modal } = $vxe
+      let { _chartModals } = $table
       if (!_chartModals) {
         _chartModals = $table._chartModals = []
       }
@@ -84,8 +85,8 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethod
         }
       }
       _chartModals.push(opts.id)
-      if (modal) {
-        modal.open(opts)
+      if (VXETableInstance.modal) {
+        VXETableInstance.modal.open(opts)
       }
     }
   }
@@ -138,10 +139,9 @@ function checkPrivilege (item: MenuFirstOption | MenuChildOption, params: Interc
 
 function handleBeforeDestroyEvent (params: InterceptorParams) {
   const { $table } = params
-  const { $vxe, _chartModals } = $table
+  const { _chartModals } = $table
   if (_chartModals) {
-    const { modal } = $vxe
-    _chartModals.slice(0).reverse().forEach(modal.close)
+    _chartModals.slice(0).reverse().forEach(VXETableInstance.modal.close)
   }
 }
 
@@ -166,15 +166,14 @@ interface legendOpts {
  * 基于 vxe-table pro 的图表渲染插件
  */
 export const VXETablePluginCharts = {
-  install  (xtable: typeof VXETable) {
-    const { interceptor, menus, version } = xtable
-
+  install (vxetable: VXETableCore) {
+    VXETableInstance = vxetable
     // 检查版本
-    if (!/^(2|3)\./.test(version)) {
+    if (!/^(2|3)\./.test(vxetable.version)) {
       console.error('[vxe-table-plugin-charts] Version vxe-table 3.x is required')
     }
 
-    menus.mixin({
+    vxetable.menus.mixin({
       CHART_BAR_X_AXIS: createChartModal((params) => {
         const { $table, menu } = params
         const cellAreas = $table.getCellAreas()
@@ -373,8 +372,8 @@ export const VXETablePluginCharts = {
       })
     })
 
-    interceptor.add('beforeDestroy', handleBeforeDestroyEvent)
-    interceptor.add('event.showMenu', handlePrivilegeEvent)
+    vxetable.interceptor.add('beforeDestroy', handleBeforeDestroyEvent)
+    vxetable.interceptor.add('event.showMenu', handlePrivilegeEvent)
   }
 }
 
