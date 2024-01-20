@@ -1,9 +1,9 @@
 import { h } from 'vue'
 import XEUtils from 'xe-utils'
 import { VXETableCore, VxeTableDefines, VxeGlobalInterceptorHandles, VxeGlobalMenusHandles } from 'vxe-table'
-import echarts from 'echarts/lib/echarts'
 
 let VXETableInstance: VXETableCore
+let globalEcharts: any
 
 interface CMItem {
   id: string;
@@ -62,7 +62,7 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethod
             const { refElem } = $modal.getRefMaps()
             const chartElem: HTMLDivElement | null = refElem.value.querySelector('.vxe-chart--wrapper')
             if (chartElem) {
-              const $chart = echarts.init(chartElem)
+              const $chart = (globalEcharts || (window as any).echarts).init(chartElem)
               $chart.setOption(getOptions(params))
               cmItem.$chart = $chart
             }
@@ -363,8 +363,11 @@ function handlePrivilegeEvent (params: VxeGlobalInterceptorHandles.InterceptorSh
  * 基于 vxe-table 表格的扩展插件，支持渲染 echarts 图表
  */
 export const VXETablePluginCharts = {
-  install (vxetable: VXETableCore) {
+  install (vxetable: VXETableCore, options?: {
+    echarts?: any
+  }) {
     VXETableInstance = vxetable
+    globalEcharts = options ? options.echarts : null
     // 检查版本
     if (!/^(4)\./.test(vxetable.version)) {
       console.error('[vxe-table-plugin-charts] Version vxe-table 4.x is required')

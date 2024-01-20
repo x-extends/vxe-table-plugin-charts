@@ -14,7 +14,7 @@
 ## Installing
 
 ```shell
-npm install xe-utils vxe-table@next vxe-table-plugin-charts@next echarts
+npm install vxe-table@next vxe-table-plugin-charts@next echarts
 ```
 
 ```javascript
@@ -25,13 +25,20 @@ import VXETablePluginCharts from 'vxe-table-plugin-charts'
 import 'vxe-table-plugin-charts/dist/style.css'
 // ...
 
-VXETable.use(VXETablePluginCharts)
+// 方式1：NPM 安装，注入 echarts 对象
+VXETable.use(VXETablePluginCharts, {
+  echarts
+})
+
+// 方式2：CDN 安装，只要确保 window.echarts 存在即可
+// VXETable.use(VXETablePluginCharts)
 ```
 
 ## Import on demand
 
 ```javascript
 // ...
+import echarts from 'echarts/lib/echarts'
 import 'echarts/lib/chart/bar'
 import 'echarts/lib/chart/pie'
 import 'echarts/lib/chart/line'
@@ -43,7 +50,9 @@ import VXETablePluginCharts from 'vxe-table-plugin-charts'
 import 'vxe-table-plugin-charts/dist/style.css'
 // ...
 
-VXETable.use(VXETablePluginCharts)
+VXETable.use(VXETablePluginCharts, {
+  echarts
+})
 ```
 
 ## API
