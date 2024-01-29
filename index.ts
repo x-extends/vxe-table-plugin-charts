@@ -170,7 +170,7 @@ export const VXETablePluginCharts = {
     VXETableInstance = vxetable
     // 检查版本
     if (!/^(2|3)\./.test(vxetable.version)) {
-      console.error('[vxe-table-plugin-charts] Version vxe-table 3.x is required')
+      console.error('[vxe-table-plugin-charts 3.x] Version vxe-table 3.x is required')
     }
 
     vxetable.menus.mixin({
