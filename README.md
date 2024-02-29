@@ -46,6 +46,7 @@ import 'echarts/lib/component/grid'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/legend'
 import 'echarts/lib/component/legendScroll'
+
 import VXETablePluginCharts from 'vxe-table-plugin-charts'
 import 'vxe-table-plugin-charts/dist/style.css'
 // ...
@@ -70,11 +71,10 @@ VXETable.use(VXETablePluginCharts, {
 
 ```html
 <vxe-table
-  resizable
   height="500"
   :data="tableData"
   :mouse-config="{ area: true }"
-  :context-menu="{body: {options: bodyMenus}}"
+  :menu-config="menuConfig"
   :edit-config="{trigger: 'dblclick', mode: 'cell'}">
   <vxe-column type="seq" width="60"></vxe-column>
   <vxe-column field="nickname" title="Nickname" :edit-render="{name: 'input'}"></vxe-column>
@@ -92,11 +92,13 @@ export default {
         { id: 100, name: 'Test1', nickname: 'Nickname1', sex: '1', age: 26, rate: '3' },
         { id: 100, name: 'Test2', nickname: 'Nickname2', sex: '0', age: 28, rate: '5' }
       ],
-      bodyMenus: [
-        [
-          { code: 'CHART_LINE', name: '折线图' }
-        ]
-      ]
+      menuConfig: {
+        body: {
+          options: [
+            { code: 'CHART_LINE', name: '折线图' }
+          ]
+        }
+      }
     }
   }
 }

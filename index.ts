@@ -370,7 +370,7 @@ export const VXETablePluginCharts = {
     globalEcharts = options ? options.echarts : null
     // 检查版本
     if (!/^(4)\./.test(vxetable.version)) {
-      console.error('[vxe-table-plugin-charts] Version vxe-table 4.x is required')
+      console.error('[vxe-table-plugin-charts 4.x] Version vxe-table 4.x is required')
     }
 
     vxetable.interceptor.add('unmounted', handleBeforeDestroyEvent)

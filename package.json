@@ -1,6 +1,6 @@
 {
   "name": "vxe-table-plugin-charts",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "基于 vxe-table 表格的扩展插件，支持渲染 echarts 图表",
   "scripts": {
     "lib": "gulp build"
@@ -54,7 +54,7 @@
     "typescript": "^4.6.4",
     "vue": "^3.3.4",
     "vxe-table": "^4.5.18",
-    "xe-utils": "^3.5.18"
+    "xe-utils": "^3.5.19"
   },
   "peerDependencies": {
     "vxe-table": "^4.5.0"
