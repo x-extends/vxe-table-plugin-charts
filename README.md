@@ -5,7 +5,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/vxe-table-plugin-charts.svg?style=flat-square)](http://npm-stat.com/charts.html?package=vxe-table-plugin-charts)
 [![npm license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
-基于 [vxe-table](https://www.npmjs.com/package/vxe-table) PRO 的图表渲染插件
+基于 [vxe-table](https://www.npmjs.com/package/vxe-table) 的图表渲染插件（依赖区域选取功能），基于 [echarts](https://github.com/apache/incubator-echarts) 实现
 
 ## Compatibility
 
