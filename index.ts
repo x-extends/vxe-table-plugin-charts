@@ -10,7 +10,6 @@ import {
   ModalDefaultSlotParams,
   VxeGlobalMenusHandles
 } from 'vxe-table'
-import * as echarts from 'echarts/lib/echarts'
 
 declare module 'vxe-table' {
   /* eslint-disable no-unused-vars */
@@ -23,6 +22,7 @@ declare module 'vxe-table' {
 }
 
 let VXETableInstance: VXETableCore
+let globalEcharts: any
 
 function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethodParams) => any) {
   return {
@@ -61,9 +61,9 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethod
         events: {
           show (evntParams: ModalEventParams) {
             const { $modal } = evntParams
-            const elem = <HTMLDivElement> $modal.$el.querySelector('.vxe-chart--wrapper')
-            if (elem) {
-              const $chart = echarts.init(elem)
+            const chartElem = <HTMLDivElement> $modal.$el.querySelector('.vxe-chart--wrapper')
+            if (chartElem) {
+              const $chart = (globalEcharts || (window as any).echarts).init(chartElem)
               $chart.setOption(getOptions(params))
               $modal.$chart = $chart
             }
@@ -166,10 +166,14 @@ interface legendOpts {
  * 基于 vxe-table pro 的图表渲染插件
  */
 export const VXETablePluginCharts = {
-  install (vxetable: VXETableCore) {
+  install (vxetable: VXETableCore, options?: {
+    echarts?: any
+  }) {
     VXETableInstance = vxetable
+    globalEcharts = options ? options.echarts : null
+
     // 检查版本
-    if (!/^(2|3)\./.test(vxetable.version)) {
+    if (!/^(3)\./.test(vxetable.version)) {
       console.error('[vxe-table-plugin-charts 3.x] Version vxe-table 3.x is required')
     }
 

@@ -51,7 +51,6 @@ gulp.task('build_umd', function () {
   return gulp.src(['index.ts'])
     .pipe(ts(tsconfig.compilerOptions))
     .pipe(replace('import XEUtils from \'xe-utils/ctor\';', 'import XEUtils from \'xe-utils\';'))
-    .pipe(replace('import * echarts from \'echarts/lib/echarts\';', 'import * echarts from \'echarts\';'))
     .pipe(babel({
       moduleId: pack.name,
       presets: ['@babel/env'],
