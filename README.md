@@ -68,7 +68,6 @@ VXETable.use(VXETablePluginCharts)
 
 ```html
 <vxe-table
-  resizable
   height="500"
   :data="tableData"
   :mouse-config="{ area: true }"
