@@ -369,7 +369,7 @@ export const VXETablePluginCharts = {
     VXETableInstance = vxetable
     globalEcharts = options ? options.echarts : null
     // 检查版本
-    if (!/^(4)\./.test(vxetable.version)) {
+    if (!/^(4)\./.test(vxetable.version) && !/v4/i.test((vxetable as any).v)) {
       console.error('[vxe-table-plugin-charts 4.x] Version vxe-table 4.x is required')
     }
 
