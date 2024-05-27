@@ -60,7 +60,8 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethod
           onShow (evntParams) {
             const { $modal } = evntParams
             const { refElem } = $modal.getRefMaps()
-            const chartElem: HTMLDivElement | null = refElem.value.querySelector('.vxe-chart--wrapper')
+            const elem = refElem.value
+            const chartElem: HTMLDivElement | null = elem ? elem.querySelector('.vxe-chart--wrapper') : null
             if (chartElem) {
               const $chart = (globalEcharts || (window as any).echarts).init(chartElem)
               $chart.setOption(getOptions(params))
