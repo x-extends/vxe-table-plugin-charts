@@ -1,15 +1,6 @@
 import { CreateElement } from 'vue'
 import XEUtils from 'xe-utils'
-import {
-  VXETableCore,
-  InterceptorParams,
-  InterceptorMenuParams,
-  MenuFirstOption,
-  MenuChildOption,
-  ModalEventParams,
-  ModalDefaultSlotParams,
-  VxeGlobalMenusHandles
-} from 'vxe-table'
+import { VXETableCore } from 'vxe-table'
 
 declare module 'vxe-table' {
   /* eslint-disable no-unused-vars */
@@ -24,9 +15,9 @@ declare module 'vxe-table' {
 let VXETableInstance: VXETableCore
 let globalEcharts: any
 
-function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethodParams) => any) {
+function createChartModal (getOptions: (params: any) => any) {
   return {
-    menuMethod (params: VxeGlobalMenusHandles.MenuMethodParams) {
+    menuMethod (params: any) {
       const { $table, menu } = params
       let { _chartModals } = $table
       if (!_chartModals) {
@@ -46,7 +37,7 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethod
         showZoom: true,
         className: 'vxe-table--ignore-areas-clear vxe-table--charts',
         slots: {
-          default (params: ModalDefaultSlotParams, h: CreateElement) {
+          default (params: any, h: CreateElement) {
             return [
               h('div', {
                 class: 'vxe-chart--wrapper'
@@ -59,7 +50,7 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethod
           }
         },
         events: {
-          show (evntParams: ModalEventParams) {
+          show (evntParams: any) {
             const { $modal } = evntParams
             const chartElem = <HTMLDivElement> $modal.$el.querySelector('.vxe-chart--wrapper')
             if (chartElem) {
@@ -68,7 +59,7 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethod
               $modal.$chart = $chart
             }
           },
-          hide (evntParams: ModalEventParams) {
+          hide (evntParams: any) {
             const { $modal } = evntParams
             XEUtils.remove(_chartModals, id => id === $modal.id)
             if ($modal.$chart) {
@@ -76,7 +67,7 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethod
               $modal.$chart = null
             }
           },
-          zoom (evntParams: ModalEventParams) {
+          zoom (evntParams: any) {
             const { $modal } = evntParams
             if ($modal.$chart) {
               $modal.$chart.resize()
@@ -92,7 +83,7 @@ function createChartModal (getOptions: (params: VxeGlobalMenusHandles.MenuMethod
   }
 }
 
-function checkPrivilege (item: MenuFirstOption | MenuChildOption, params: InterceptorMenuParams) {
+function checkPrivilege (item: any, params: any) {
   const { $table, column } = params
   const { code, params: chartParams = {} } = item
   switch (code) {
@@ -113,7 +104,7 @@ function checkPrivilege (item: MenuFirstOption | MenuChildOption, params: Interc
             case 'CHART_BAR_Y_AXIS':
             case 'CHART_LINE': {
               if (category) {
-                const serieColumns = cols.filter((column) => column.property !== category)
+                const serieColumns = cols.filter((column: any) => column.property !== category)
                 item.disabled = !rows.length || serieColumns.length < 1
               } else {
                 item.disabled = !rows.length || cols.length < 2
@@ -122,7 +113,7 @@ function checkPrivilege (item: MenuFirstOption | MenuChildOption, params: Interc
             }
             case 'CHART_PIE': {
               if (category) {
-                const serieColumns = cols.filter((column) => column.property !== category)
+                const serieColumns = cols.filter((column: any) => column.property !== category)
                 item.disabled = !rows.length || serieColumns.length !== 1
               } else {
                 item.disabled = !rows.length || cols.length !== 2
@@ -137,7 +128,7 @@ function checkPrivilege (item: MenuFirstOption | MenuChildOption, params: Interc
   }
 }
 
-function handleBeforeDestroyEvent (params: InterceptorParams) {
+function handleBeforeDestroyEvent (params: any) {
   const { $table } = params
   const { _chartModals } = $table
   if (_chartModals) {
@@ -145,12 +136,12 @@ function handleBeforeDestroyEvent (params: InterceptorParams) {
   }
 }
 
-function handlePrivilegeEvent (params: InterceptorMenuParams) {
-  params.options.forEach((list) => {
-    list.forEach((item) => {
+function handlePrivilegeEvent (params: any) {
+  params.options.forEach((list: any) => {
+    list.forEach((item: any) => {
       checkPrivilege(item, params)
       if (item.children) {
-        item.children.forEach((child) => {
+        item.children.forEach((child: any) => {
           checkPrivilege(child, params)
         })
       }
@@ -185,27 +176,27 @@ export const VXETablePluginCharts = {
         const { params: chartParams = {} } = menu
         const { category } = chartParams
         const categoryColumn = $table.getColumnByField(category) || cols[0]
-        const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
+        const serieColumns = cols.filter((column: any) => column.property !== categoryColumn.property)
         const legendOpts: legendOpts = {
           data: []
         }
         const seriesOpts: any[] = []
         const yAxisOpts = {
           type: 'category',
-          data: rows.map((row) => XEUtils.get(row, categoryColumn.property))
+          data: rows.map((row: any) => XEUtils.get(row, categoryColumn.property))
         }
         // const seriesLabel = {
         //   normal: {
         //     show: true
         //   }
         // }
-        serieColumns.forEach((column) => {
+        serieColumns.forEach((column: any) => {
           legendOpts.data.push(column.title)
           seriesOpts.push({
             name: column.title,
             type: 'bar',
             // label: seriesLabel,
-            data: rows.map((row) => XEUtils.get(row, column.property))
+            data: rows.map((row: any) => XEUtils.get(row, column.property))
           })
         })
         const option = {
@@ -237,27 +228,27 @@ export const VXETablePluginCharts = {
         const { params: chartParams = {} } = menu
         const { category } = chartParams
         const categoryColumn = $table.getColumnByField(category) || cols[0]
-        const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
+        const serieColumns = cols.filter((column: any) => column.property !== categoryColumn.property)
         const legendOpts: legendOpts = {
           data: []
         }
         const seriesOpts: any[] = []
         const xAxisOpts = {
           type: 'category',
-          data: rows.map((row) => XEUtils.get(row, categoryColumn.property))
+          data: rows.map((row: any) => XEUtils.get(row, categoryColumn.property))
         }
         // const seriesLabel = {
         //   normal: {
         //     show: true
         //   }
         // }
-        serieColumns.forEach((column) => {
+        serieColumns.forEach((column: any) => {
           legendOpts.data.push(column.title)
           seriesOpts.push({
             name: column.title,
             type: 'bar',
             // label: seriesLabel,
-            data: rows.map((row) => XEUtils.get(row, column.property))
+            data: rows.map((row: any) => XEUtils.get(row, column.property))
           })
         })
         const option = {
@@ -289,21 +280,21 @@ export const VXETablePluginCharts = {
         const { params: chartParams = {} } = menu
         const { category } = chartParams
         const categoryColumn = $table.getColumnByField(category) || cols[0]
-        const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
+        const serieColumns = cols.filter((column: any) => column.property !== categoryColumn.property)
         const legendOpts: legendOpts = {
           data: []
         }
         const seriesOpts: any[] = []
         const xAxisOpts = {
           type: 'category',
-          data: rows.map((row) => XEUtils.get(row, categoryColumn.property))
+          data: rows.map((row: any) => XEUtils.get(row, categoryColumn.property))
         }
-        serieColumns.forEach((column) => {
+        serieColumns.forEach((column: any) => {
           legendOpts.data.push(column.title)
           seriesOpts.push({
             name: column.title,
             type: 'line',
-            data: rows.map((row) => XEUtils.get(row, column.property))
+            data: rows.map((row: any) => XEUtils.get(row, column.property))
           })
         })
         const option = {
@@ -325,18 +316,18 @@ export const VXETablePluginCharts = {
         }
         return option
       }),
-      CHART_PIE: createChartModal((params) => {
+      CHART_PIE: createChartModal((params: any) => {
         const { $table, menu } = params
         const cellAreas = $table.getCellAreas()
         const { rows, cols } = cellAreas[0]
         const { params: chartParams = {} } = menu
         const { category } = chartParams
         const categoryColumn = $table.getColumnByField(category) || cols[0]
-        const serieColumns = cols.filter((column) => column.property !== categoryColumn.property)
+        const serieColumns = cols.filter((column: any) => column.property !== categoryColumn.property)
         const serieColumn = serieColumns[0]
-        const legendData = rows.map((row) => XEUtils.get(row, categoryColumn.property))
+        const legendData = rows.map((row: any) => XEUtils.get(row, categoryColumn.property))
         const seriesData: any[] = []
-        rows.forEach((row) => {
+        rows.forEach((row: any) => {
           seriesData.push({
             name: XEUtils.get(row, categoryColumn.property),
             value: XEUtils.get(row, serieColumn.property)
