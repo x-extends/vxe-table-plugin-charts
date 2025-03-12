@@ -14,7 +14,7 @@
 ## Installing
 
 ```shell
-npm install vxe-table@legacy vxe-table-plugin-charts@legacy echarts
+npm install vxe-table@3.8.28 vxe-table-plugin-charts@3.3.3 echarts
 ```
 
 ```javascript
